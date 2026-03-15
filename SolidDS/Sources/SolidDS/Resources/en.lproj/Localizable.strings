@@ -1,0 +1,9 @@
+//
+//  Localizable.strings
+//  SolidDS
+//
+//  Created by NIKOLAI BORISOV on 13.03.2026.
+//
+
+"solid.button.ok" = "OK";
+"solid.button.cancel" = "Cancel";
