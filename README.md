@@ -15,7 +15,7 @@ A lightweight SwiftUI design system providing reusable components, design tokens
 Add the package using Swift Package Manager:
 
 ```swift
-.package(url: "https://github.com/NikolaiBorisov/SolidDS.git", from: "1.0.0")
+.package(url: "https://github.com/NikolaiBorisov/SolidDS.git", from: "0.1.0")
 ```
 
 Or add it in Xcode:
