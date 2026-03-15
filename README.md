@@ -51,5 +51,4 @@ struct ContentView: View {
 SolidDS currently includes:
 
 - SwiftUI UI components
-- Typography system
 - Reusable UI primitives
