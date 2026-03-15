@@ -3,6 +3,7 @@
 ![Swift](https://img.shields.io/badge/Swift-6-orange)
 ![Platform](https://img.shields.io/badge/iOS-15%2B-blue)
 ![SPM](https://img.shields.io/badge/SPM-supported-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-green)
 
 A lightweight SwiftUI design system providing reusable components, design tokens, and UI primitives for building consistent apps.
 
