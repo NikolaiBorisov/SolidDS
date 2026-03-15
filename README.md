@@ -29,3 +29,27 @@ Or add it in Xcode:
 File → Add Package Dependencies
 
 https://github.com/NikolaiBorisov/SolidDS
+
+## Usage
+
+```swift
+import SolidDS
+
+struct ContentView: View {
+    var body: some View {
+        SolidProgress(
+            progress: 0.75,
+            progressColor: .blue
+        )
+        .frame(height: 12)
+        .padding()
+    }
+}
+
+## Components
+
+SolidDS currently includes:
+
+- SwiftUI UI components
+- Typography system
+- Reusable UI primitives
