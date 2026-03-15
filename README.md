@@ -45,10 +45,9 @@ struct ContentView: View {
         .padding()
     }
 }
+```
 
 ## Components
 
-SolidDS currently includes:
-
-- SwiftUI UI components
+- Progress indicators
 - Reusable UI primitives
