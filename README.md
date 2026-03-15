@@ -1,5 +1,6 @@
 # SolidDS
 
+![Version](https://img.shields.io/badge/version-0.1.0-blue)
 ![Swift](https://img.shields.io/badge/Swift-6-orange)
 ![Platform](https://img.shields.io/badge/iOS-15%2B-blue)
 ![SPM](https://img.shields.io/badge/SPM-supported-brightgreen)
