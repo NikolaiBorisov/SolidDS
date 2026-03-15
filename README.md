@@ -1,5 +1,9 @@
 # SolidDS
 
+![Swift](https://img.shields.io/badge/Swift-5.9-orange)
+![Platform](https://img.shields.io/badge/iOS-15%2B-blue)
+![SPM](https://img.shields.io/badge/SPM-supported-brightgreen)
+
 A lightweight SwiftUI design system providing reusable components, design tokens, and UI primitives for building consistent apps.
 
 ## Features
