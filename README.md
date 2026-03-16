@@ -28,7 +28,7 @@ Or add it in Xcode:
 
 File → Add Package Dependencies
 
-[https://github.com/NikolaiBorisov/SolidDS](https://github.com/NikolaiBorisov/SolidDS.git)
+https://github.com/NikolaiBorisov/SolidDS.git
 
 ## Usage
 
