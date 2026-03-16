@@ -40,10 +40,10 @@ import SolidDS
 struct ContentView: View {
     var body: some View {
         SolidProgress(
-            progress: 0.75,
-            progressColor: .blue
+            value: 0.77,
+            valueColor: .blue,
+            progressStyle: .linear
         )
-        .frame(height: 12)
         .padding()
     }
 }
