@@ -10,15 +10,31 @@ import SolidDS
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-            
-            SolidProgress(value: 0.77, progressStyle: .linear)
+        NavigationStack {
+            List {
+                HStack {
+                    Image(systemName: "square.grid.3x3.square")
+                        .imageScale(.large)
+                        .foregroundStyle(.tint)
+                    
+                    Text("Hello, SolidDS!")
+                }
+                NavigationLink {
+                    SolidProgressDemoView(controlType: .buttons)
+                } label: {
+                    Text("Progress [Buttons]")
+                        .foregroundColor(.accentColor)
+                }
+                NavigationLink {
+                    SolidProgressDemoView(controlType: .slider)
+                } label: {
+                    Text("Progress [Slider]")
+                        .foregroundColor(.accentColor)
+                }
+            }
+            .padding(.top)
+            .navigationTitle("SolidDS Catalog")
         }
-        .padding()
     }
 }
 

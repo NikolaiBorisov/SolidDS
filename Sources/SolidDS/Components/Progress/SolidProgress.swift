@@ -7,7 +7,28 @@
 
 import SwiftUI
 
-public struct SolidProgress<Style: ProgressViewStyle>: View {
+public struct SolidProgress: View {
+    
+    public enum ProgressDefaults {
+        
+        public static var progressPadding: EdgeInsets {
+            EdgeInsets(
+                top: 6,
+                leading: 8,
+                bottom: 6,
+                trailing: 8
+            )
+        }
+        
+        public static var capsulePadding: EdgeInsets {
+            EdgeInsets(
+                top: 4,
+                leading: 8,
+                bottom: 4,
+                trailing: 8
+            )
+        }
+    }
     
     // MARK: Public configuration
     
@@ -15,11 +36,25 @@ public struct SolidProgress<Style: ProgressViewStyle>: View {
     private let valueFormat: SolidProgressValueFormat
     private let orientation: SolidProgressOrientation
     private let size: SolidProgressSize
-    private let style: SolidProgressStyle
+    private let valueStyle: SolidProgressValueStyle
+    private let progressType: SolidProgressType
     
-    private let progressStyle: Style
+    private let progressPadding: EdgeInsets
+    private let customContentSpacing: CGFloat?
+    private let customProgressContainerHeight: CGFloat?
+    private let progressTrackHeight: CGFloat
+    private let progressTrackColor: Color
+    private let customFont: Font?
     
-    private let tint: Color
+    private let capsulePadding: EdgeInsets
+    private let capsuleBgColor: Color
+    private let capsuleBorderColor: Color
+    private let capsuleBorderWidth: CGFloat
+    
+    private let customCircularScale: CGFloat?
+    private let customCircularContainerSize: CGFloat?
+    
+    private let progressTint: Color
     private let valueColor: Color
     
     private let container: SolidProgressContainerStyle
@@ -36,24 +71,55 @@ public struct SolidProgress<Style: ProgressViewStyle>: View {
         
         orientation: SolidProgressOrientation = .horizontal,
         size: SolidProgressSize = .medium,
-        style: SolidProgressStyle = .simple,
-        tint: Color = .accentColor,
-        progressStyle: Style,
+        valueStyle: SolidProgressValueStyle = .simple,
+        progressTint: Color = .accentColor,
+        progressType: SolidProgressType = .linear,
         container: SolidProgressContainerStyle = .init(),
+        
+        progressPadding: EdgeInsets = ProgressDefaults.progressPadding,
+        customContentSpacing: CGFloat? = nil,
+        customProgressContainerHeight: CGFloat? = nil,
+        progressTrackHeight: CGFloat = 6,
+        progressTrackColor: Color = Color.secondary.opacity(0.2),
+        customFont: Font? = nil,
+        
+        capsulePadding: EdgeInsets = ProgressDefaults.capsulePadding,
+        capsuleBgColor: Color = .secondary.opacity(0.15),
+        capsuleBorderColor: Color = .accentColor,
+        capsuleBorderWidth: CGFloat = 1,
+        
+        customCircularScale: CGFloat? = 1,
+        customCircularContainerSize: CGFloat? = nil,
         
         topDivider: SolidProgressDivider? = nil,
         bottomDivider: SolidProgressDivider? = nil
     ) {
+        // Clamp progress value to valid range 0...1
         self.value = min(max(value, 0), 1)
         self.valueFormat = valueFormat
         self.valueColor = valueColor
         
         self.orientation = orientation
         self.size = size
-        self.style = style
-        self.tint = tint
-        self.progressStyle = progressStyle
+        self.valueStyle = valueStyle
+        self.progressTint = progressTint
+        self.progressType = progressType
         self.container = container
+        
+        self.progressPadding = progressPadding
+        self.customContentSpacing = customContentSpacing
+        self.customProgressContainerHeight = customProgressContainerHeight
+        self.progressTrackHeight = progressTrackHeight
+        self.progressTrackColor = progressTrackColor
+        self.customFont = customFont
+        
+        self.capsulePadding = capsulePadding
+        self.capsuleBgColor = capsuleBgColor
+        self.capsuleBorderColor = capsuleBorderColor
+        self.capsuleBorderWidth = capsuleBorderWidth
+        
+        self.customCircularScale = customCircularScale
+        self.customCircularContainerSize = customCircularContainerSize
         
         self.topDivider = topDivider
         self.bottomDivider = bottomDivider
@@ -64,9 +130,7 @@ public struct SolidProgress<Style: ProgressViewStyle>: View {
     public var body: some View {
         
         VStack(spacing: 0) {
-            
             content
-            
         }
         .background(container.background)
         .clipShape(RoundedRectangle(cornerRadius: container.cornerRadius))
@@ -94,22 +158,39 @@ private extension SolidProgress {
     
     var content: some View {
         
-        HStack(spacing: spacing) {
+        HStack(spacing: contentSpacing) {
             
-            ProgressView(value: value)
-                .progressViewStyle(progressStyle)
-                .tint(tint)
-                .frame(height: progressHeight)
+            switch progressType {
+                
+            case .linear:
+                SolidProgressTrack(
+                    progress: value,
+                    height: progressTrackHeight,
+                    tint: progressTint,
+                    trackColor: progressTrackColor
+                )
+                
+            case .circular:
+                ProgressView(value: value)
+                    .progressViewStyle(.circular)
+                    .tint(progressTint)
+                    .frame(
+                        width: circularContainerSize,
+                        height: circularContainerSize
+                    )
+                    .scaleEffect(circularScale)
+            }
             
-            if style == .capsule {
-                valueCapsule
-            } else {
-                valueText
+            if progressType == .linear {
+                if valueStyle == .capsule {
+                    valueCapsule
+                } else {
+                    valueText
+                }
             }
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 6)
-        .animation(.easeInOut(duration: 0.25), value: formattedValue)
+        .padding(progressPadding)
+        .animation(.easeInOut(duration: 0.25), value: value)
     }
     
     var valueText: some View {
@@ -121,14 +202,16 @@ private extension SolidProgress {
     var valueCapsule: some View {
         Text(formattedValue)
             .font(font)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(Capsule().fill(tint.opacity(0.15)))
+            .padding(capsulePadding)
+            .background(Capsule().fill(capsuleBgColor))
             .overlay(
-                Capsule().stroke(tint.opacity(0.4), lineWidth: 1)
+                Capsule().stroke(
+                    capsuleBorderColor,
+                    lineWidth: capsuleBorderWidth
+                )
             )
             .foregroundStyle(valueColor)
-            .animation(.easeInOut(duration: 0.25), value: formattedValue)
+            .animation(.easeInOut(duration: 0.25), value: value)
     }
     
     func dividerView(_ divider: SolidProgressDivider) -> some View {
@@ -141,7 +224,11 @@ private extension SolidProgress {
 
 private extension SolidProgress {
     
-    var progressHeight: CGFloat {
+    var progressContainerHeight: CGFloat {
+        customProgressContainerHeight ?? defaultProgressContainerHeight
+    }
+    
+    var defaultProgressContainerHeight: CGFloat {
         switch size {
         case .small: return 4
         case .medium: return 6
@@ -149,7 +236,11 @@ private extension SolidProgress {
         }
     }
     
-    var spacing: CGFloat {
+    var contentSpacing: CGFloat {
+        customContentSpacing ?? defaultContentSpacing
+    }
+    
+    var defaultContentSpacing: CGFloat {
         switch size {
         case .small: return 6
         case .medium: return 8
@@ -158,10 +249,38 @@ private extension SolidProgress {
     }
     
     var font: Font {
+        customFont ?? defaultFont
+    }
+    
+    var defaultFont: Font {
         switch size {
         case .small: return .caption2.monospacedDigit()
         case .medium: return .caption.monospacedDigit()
         case .large: return .callout.monospacedDigit()
+        }
+    }
+    
+    var circularContainerSize: CGFloat {
+        customCircularContainerSize ?? defaultCircularContainerSize
+    }
+    
+    var defaultCircularContainerSize: CGFloat {
+        switch size {
+        case .small: return 20
+        case .medium: return 28
+        case .large: return 36
+        }
+    }
+    
+    var circularScale: CGFloat {
+        customCircularScale ?? defaultCircularScale
+    }
+    
+    var defaultCircularScale: CGFloat {
+        switch size {
+        case .small: return 0.8
+        case .medium: return 1.0
+        case .large: return 1.3
         }
     }
 }
@@ -211,6 +330,34 @@ private extension SolidProgress {
     }
 }
 
+private extension SolidProgress {
+    struct SolidProgressTrack: View {
+        
+        var progress: Double
+        var height: CGFloat
+        var tint: Color
+        var trackColor: Color
+        
+        var body: some View {
+            
+            GeometryReader { geo in
+                
+                Capsule()
+                    .fill(trackColor)
+                    .overlay(alignment: .leading) {
+                        Capsule()
+                            .fill(tint)
+                            .frame(width: geo.size.width * progress)
+                    }
+                
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: height)
+            .clipped()
+        }
+    }
+}
+
 struct SolidProgress_Previews: PreviewProvider {
     static var previews: some View {
         ScrollView {
@@ -221,25 +368,21 @@ struct SolidProgress_Previews: PreviewProvider {
                 SolidProgress(
                     value: 0.77,
                     valueFormat: .integer(percent: false),
-                    progressStyle: .linear
                 )
                 
                 SolidProgress(
                     value: 0.77,
                     valueFormat: .decimal(places: 1, percent: false),
-                    progressStyle: .linear
                 )
                 
                 SolidProgress(
                     value: 0.77,
                     valueFormat: .decimal(places: 2, percent: false),
-                    progressStyle: .linear
                 )
                 
                 SolidProgress(
                     value: 0.77,
                     valueFormat: .decimal(places: 3, percent: false),
-                    progressStyle: .linear
                 )
                 
                 Divider().padding(.vertical)
@@ -250,25 +393,21 @@ struct SolidProgress_Previews: PreviewProvider {
                 SolidProgress(
                     value: 0.77,
                     valueFormat: .integer(percent: true),
-                    progressStyle: .linear
                 )
                 
                 SolidProgress(
                     value: 0.77,
                     valueFormat: .decimal(places: 1, percent: true),
-                    progressStyle: .linear
                 )
                 
                 SolidProgress(
                     value: 0.77,
                     valueFormat: .decimal(places: 2, percent: true),
-                    progressStyle: .linear
                 )
                 
                 SolidProgress(
                     value: 0.77,
                     valueFormat: .decimal(places: 3, percent: true),
-                    progressStyle: .linear
                 )
                 
                 Divider().padding(.vertical)
@@ -279,29 +418,25 @@ struct SolidProgress_Previews: PreviewProvider {
                 SolidProgress(
                     value: 0.77,
                     valueFormat: .integer(percent: false),
-                    style: .capsule,
-                    progressStyle: .linear
+                    valueStyle: .capsule,
                 )
                 
                 SolidProgress(
                     value: 0.77,
                     valueFormat: .decimal(places: 1, percent: false),
-                    style: .capsule,
-                    progressStyle: .linear
+                    valueStyle: .capsule,
                 )
                 
                 SolidProgress(
                     value: 0.77,
                     valueFormat: .decimal(places: 1, percent: true),
-                    style: .capsule,
-                    progressStyle: .linear
+                    valueStyle: .capsule,
                 )
                 
                 SolidProgress(
                     value: 0.77,
                     valueFormat: .decimal(places: 2, percent: true),
-                    style: .capsule,
-                    progressStyle: .linear
+                    valueStyle: .capsule,
                 )
                 
                 // Card container progress view
@@ -310,8 +445,7 @@ struct SolidProgress_Previews: PreviewProvider {
                 SolidProgress(
                     value: 0.77,
                     valueFormat: .decimal(places: 1, percent: false),
-                    style: .capsule,
-                    progressStyle: .linear,
+                    valueStyle: .capsule,
                     container: .init(
                         background: AnyShapeStyle(.regularMaterial),
                         cornerRadius: 16,
@@ -333,27 +467,52 @@ struct SolidProgress_Previews: PreviewProvider {
                 SolidProgress(
                     value: 0.77,
                     valueFormat: .decimal(places: 2, percent: true),
-                    style: .capsule,
-                    progressStyle: .linear,
+                    valueStyle: .capsule,
                     container: .init(
                         background: AnyShapeStyle(.regularMaterial),
                         cornerRadius: 16,
                         borderColor: .accentColor,
                         borderWidth: 1
                     ),
+                    capsuleBgColor: .green,
                     topDivider: nil,
                     bottomDivider: nil
                 )
                 
                 Divider().padding(.vertical)
                 
-                SolidProgressDemo(controlType: .buttons)
-                
-                Divider().padding(.vertical)
-                
-                SolidProgressDemo(controlType: .slider)
-                
-                Divider().padding(.vertical)
+                // Circular progress view
+                VStack(spacing: 16) {
+                    
+                    description(text: "Circular progress view")
+                    
+                    SolidProgress(
+                        value: 0.0,
+                        progressTint: .red,
+                        progressType: .circular,
+                        customCircularScale: 0.5
+                    )
+                    
+                    SolidProgress(
+                        value: 0.0,
+                        progressTint: .green,
+                        progressType: .circular,
+                        container: .init(
+                            background: AnyShapeStyle(.secondary),
+                            cornerRadius: 20,
+                            borderColor: .primary,
+                            borderWidth: 1
+                        ),
+                        customCircularScale: 1.0
+                    )
+                    
+                    SolidProgress(
+                        value: 0.0,
+                        progressTint: .blue,
+                        progressType: .circular,
+                        customCircularScale: 2
+                    )
+                }
             }
             .padding()
         }
@@ -366,65 +525,6 @@ struct SolidProgress_Previews: PreviewProvider {
             .frame(maxWidth: .infinity, alignment: .leading)
             .multilineTextAlignment(.leading)
             .foregroundStyle(.secondary)
-            .padding(.leading, 20)
-    }
-}
-
-struct SolidProgressDemo: View {
-    
-    enum ControlType {
-        case buttons
-        case slider
-    }
-    
-    let controlType: ControlType
-    
-    @State private var progress: Double = 0.05
-    
-    var body: some View {
-        
-        VStack(spacing: 20) {
-            
-            SolidProgress(
-                value: progress,
-                valueFormat: .decimal(places: 1, percent: true),
-                style: .capsule,
-                progressStyle: .linear
-            )
-            
-            controls
-        }
-    }
-    
-    @ViewBuilder
-    private var controls: some View {
-        
-        switch controlType {
-            
-        case .buttons:
-            
-            HStack(spacing: 20) {
-                
-                Button {
-                    progress = max(progress - 0.05, 0)
-                } label: {
-                    Image(systemName: "minus")
-                        .frame(width: 20, height: 20)
-                }
-                .buttonStyle(.borderedProminent)
-                
-                Button {
-                    progress = min(progress + 0.05, 1)
-                } label: {
-                    Image(systemName: "plus")
-                        .frame(width: 20, height: 20)
-                }
-                .buttonStyle(.borderedProminent)
-            }
-            
-        case .slider:
-            
-            Slider(value: $progress, in: 0...1)
-        }
+            .padding(.leading, 8)
     }
 }

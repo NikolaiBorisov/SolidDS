@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FA1605912F66D61F00E915C0 /* SolidDS in Frameworks */ = {isa = PBXBuildFile; productRef = FA1605902F66D61F00E915C0 /* SolidDS */; };
+		FABB66902F67B41400B8C41B /* SolidDS in Frameworks */ = {isa = PBXBuildFile; productRef = FABB668F2F67B41400B8C41B /* SolidDS */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,7 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA1605912F66D61F00E915C0 /* SolidDS in Frameworks */,
+				FABB66902F67B41400B8C41B /* SolidDS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,7 +117,7 @@
 			);
 			name = SolidDSCatalog;
 			packageProductDependencies = (
-				FA1605902F66D61F00E915C0 /* SolidDS */,
+				FABB668F2F67B41400B8C41B /* SolidDS */,
 			);
 			productName = SolidDSCatalog;
 			productReference = FA6F17BF2F656CCD0098CFB7 /* SolidDSCatalog.app */;
@@ -202,7 +202,7 @@
 			mainGroup = FA6F17B62F656CCD0098CFB7;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				FA16058F2F66D61F00E915C0 /* XCLocalSwiftPackageReference "../SolidDS" */,
+				FABB668E2F67B41400B8C41B /* XCLocalSwiftPackageReference "../../Developer" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = FA6F17C02F656CCD0098CFB7 /* Products */;
@@ -569,14 +569,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		FA16058F2F66D61F00E915C0 /* XCLocalSwiftPackageReference "../SolidDS" */ = {
+		FABB668E2F67B41400B8C41B /* XCLocalSwiftPackageReference "../../Developer" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../SolidDS;
+			relativePath = ../../Developer;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		FA1605902F66D61F00E915C0 /* SolidDS */ = {
+		FABB668F2F67B41400B8C41B /* SolidDS */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SolidDS;
 		};
