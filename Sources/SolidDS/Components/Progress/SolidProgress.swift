@@ -7,67 +7,74 @@
 
 import SwiftUI
 
+/// A customizable progress component supporting linear and circular styles.
 public struct SolidProgress: View {
     
+    // MARK: - Defaults
     public enum ProgressDefaults {
         
-        public static var progressPadding: EdgeInsets {
-            EdgeInsets(
-                top: 6,
-                leading: 8,
-                bottom: 6,
-                trailing: 8
-            )
-        }
+        public static let progressPadding = EdgeInsets(
+            top: 6,
+            leading: 8,
+            bottom: 6,
+            trailing: 8
+        )
         
-        public static var capsulePadding: EdgeInsets {
-            EdgeInsets(
-                top: 4,
-                leading: 8,
-                bottom: 4,
-                trailing: 8
-            )
-        }
+        public static let capsulePadding = EdgeInsets(
+            top: 4,
+            leading: 8,
+            bottom: 4,
+            trailing: 8
+        )
     }
     
-    // MARK: Public configuration
+    private let formatter = NumberFormatter()
     
+    // MARK: - Input Properties
     private let value: Double
     private let valueFormat: SolidProgressValueFormat
+    
+    // MARK: - Layout Properties
     private let orientation: SolidProgressOrientation
     private let size: SolidProgressSize
-    private let valueStyle: SolidProgressValueStyle
-    private let progressType: SolidProgressType
-    
     private let progressPadding: EdgeInsets
-    private let customContentSpacing: CGFloat?
-    private let customProgressContainerHeight: CGFloat?
     private let progressTrackHeight: CGFloat
     private let progressTrackColor: Color
-    private let customFont: Font?
+    private let customContentSpacing: CGFloat?
+    private let customProgressContainerHeight: CGFloat?
+    private let valuePosition: SolidProgressValuePosition
     
+    // MARK: - Styling Properties
+    private let valueStyle: SolidProgressValueStyle
+    private let progressType: SolidProgressType
+    private let progressTint: Color
+    private let valueColor: Color
+    
+    // MARK: - Capsule Styling
     private let capsulePadding: EdgeInsets
     private let capsuleBgColor: Color
     private let capsuleBorderColor: Color
     private let capsuleBorderWidth: CGFloat
     
+    // MARK: - Customization
+    private let customFont: Font?
     private let customCircularScale: CGFloat?
     private let customCircularContainerSize: CGFloat?
     
-    private let progressTint: Color
-    private let valueColor: Color
-    
+    // MARK: - Container
     private let container: SolidProgressContainerStyle
     
+    // MARK: - Dividers
     private let topDivider: SolidProgressDivider?
     private let bottomDivider: SolidProgressDivider?
     
-    // MARK: Init
+    // MARK: - Init
     
     public init(
         value: Double,
         valueFormat: SolidProgressValueFormat = .integer(percent: true),
         valueColor: Color = .primary,
+        valuePosition: SolidProgressValuePosition = .trailing,
         
         orientation: SolidProgressOrientation = .horizontal,
         size: SolidProgressSize = .medium,
@@ -79,7 +86,7 @@ public struct SolidProgress: View {
         progressPadding: EdgeInsets = ProgressDefaults.progressPadding,
         customContentSpacing: CGFloat? = nil,
         customProgressContainerHeight: CGFloat? = nil,
-        progressTrackHeight: CGFloat = 6,
+        progressTrackHeight: CGFloat = 4,
         progressTrackColor: Color = Color.secondary.opacity(0.2),
         customFont: Font? = nil,
         
@@ -98,6 +105,7 @@ public struct SolidProgress: View {
         self.value = min(max(value, 0), 1)
         self.valueFormat = valueFormat
         self.valueColor = valueColor
+        self.valuePosition = valuePosition
         
         self.orientation = orientation
         self.size = size
@@ -125,8 +133,7 @@ public struct SolidProgress: View {
         self.bottomDivider = bottomDivider
     }
     
-    // MARK: Body
-    
+    // MARK: - Body
     public var body: some View {
         
         VStack(spacing: 0) {
@@ -154,16 +161,78 @@ public struct SolidProgress: View {
     }
 }
 
-private extension SolidProgress {
+// MARK: - Subcomponents
+
+extension SolidProgress {
     
     var content: some View {
         
-        HStack(spacing: contentSpacing) {
-            
+        Group {
+            switch valuePosition {
+                
+            case .leading:
+                HStack(spacing: contentSpacing) {
+                    valueView
+                    progressView
+                }
+                
+            case .trailing:
+                HStack(spacing: contentSpacing) {
+                    progressView
+                    valueView
+                }
+                
+            case .top:
+                VStack(spacing: contentSpacing) {
+                    valueView
+                    progressView
+                }
+                
+            case .bottom:
+                VStack(spacing: contentSpacing) {
+                    progressView
+                    valueView
+                }
+                
+            case .overlayLeading:
+                ZStack(alignment: .leading) {
+                    progressView
+                    valueView
+                }
+                
+            case .overlayTrailing:
+                ZStack(alignment: .trailing) {
+                    progressView
+                    valueView
+                }
+                
+            case .overlayCenter:
+                ZStack {
+                    progressView
+                    valueView
+                }
+            }
+        }
+        .padding(progressPadding)
+        .animation(.easeInOut(duration: 0.25), value: value)
+    }
+    
+    var valueView: some View {
+        Group {
+            if valueStyle == .capsule {
+                valueCapsule
+            } else {
+                valueText
+            }
+        }
+    }
+    
+    var progressView: some View {
+        Group {
             switch progressType {
                 
             case .linear:
-                SolidProgressTrack(
+                LinearProgressTrack(
                     progress: value,
                     height: progressTrackHeight,
                     tint: progressTint,
@@ -180,17 +249,7 @@ private extension SolidProgress {
                     )
                     .scaleEffect(circularScale)
             }
-            
-            if progressType == .linear {
-                if valueStyle == .capsule {
-                    valueCapsule
-                } else {
-                    valueText
-                }
-            }
         }
-        .padding(progressPadding)
-        .animation(.easeInOut(duration: 0.25), value: value)
     }
     
     var valueText: some View {
@@ -223,7 +282,7 @@ private extension SolidProgress {
 }
 
 private extension SolidProgress {
-    
+    // MARK: - Layout Computations
     var progressContainerHeight: CGFloat {
         customProgressContainerHeight ?? defaultProgressContainerHeight
     }
@@ -248,6 +307,7 @@ private extension SolidProgress {
         }
     }
     
+    // MARK: - Typography
     var font: Font {
         customFont ?? defaultFont
     }
@@ -260,6 +320,7 @@ private extension SolidProgress {
         }
     }
     
+    // MARK: - Circular Config
     var circularContainerSize: CGFloat {
         customCircularContainerSize ?? defaultCircularContainerSize
     }
@@ -285,6 +346,7 @@ private extension SolidProgress {
     }
 }
 
+// MARK: - Formatting
 private extension SolidProgress {
     
     var formattedValue: String {
@@ -300,8 +362,6 @@ private extension SolidProgress {
             return percent ? "\(number)%" : "\(number)"
             
         case .decimal(let places, let percent, let separator):
-            
-            let formatter = NumberFormatter()
             
             formatter.minimumFractionDigits = places
             formatter.maximumFractionDigits = places
@@ -319,7 +379,8 @@ private extension SolidProgress {
             }
             
             let number = value * 100
-            let string = formatter.string(from: NSNumber(value: number)) ?? "\(number)"
+            let string = formatter
+                .string(from: NSNumber(value: number)) ?? "\(number)"
             
             return percent ? "\(string)%" : string
             
@@ -330,34 +391,7 @@ private extension SolidProgress {
     }
 }
 
-private extension SolidProgress {
-    struct SolidProgressTrack: View {
-        
-        var progress: Double
-        var height: CGFloat
-        var tint: Color
-        var trackColor: Color
-        
-        var body: some View {
-            
-            GeometryReader { geo in
-                
-                Capsule()
-                    .fill(trackColor)
-                    .overlay(alignment: .leading) {
-                        Capsule()
-                            .fill(tint)
-                            .frame(width: geo.size.width * progress)
-                    }
-                
-            }
-            .frame(maxWidth: .infinity)
-            .frame(height: height)
-            .clipped()
-        }
-    }
-}
-
+// MARK: - Previews
 struct SolidProgress_Previews: PreviewProvider {
     static var previews: some View {
         ScrollView {
@@ -481,6 +515,53 @@ struct SolidProgress_Previews: PreviewProvider {
                 
                 Divider().padding(.vertical)
                 
+                // Progress Value Placement
+                VStack(spacing: 16) {
+                    
+                    description(text: "Progress Value Placement")
+                    
+                    SolidProgress(
+                        value: 0.7,
+                        valuePosition: .leading
+                    )
+                    
+                    SolidProgress(
+                        value: 0.7,
+                        valuePosition: .top
+                    )
+                    
+                    SolidProgress(
+                        value: 0.7,
+                        valuePosition: .bottom
+                    )
+                    
+                    SolidProgress(
+                        value: 0.7,
+                        valuePosition: .overlayCenter,
+                        valueStyle: .capsule,
+                        capsuleBgColor: .accentColor,
+                        capsuleBorderColor: .primary
+                    )
+                    
+                    SolidProgress(
+                        value: 0.7,
+                        valuePosition: .overlayLeading,
+                        valueStyle: .capsule,
+                        capsuleBgColor: .accentColor,
+                        capsuleBorderColor: .primary
+                    )
+                    
+                    SolidProgress(
+                        value: 0.7,
+                        valuePosition: .overlayTrailing,
+                        valueStyle: .capsule,
+                        capsuleBgColor: .accentColor,
+                        capsuleBorderColor: .primary
+                    )
+                }
+                
+                Divider().padding(.vertical)
+                
                 // Circular progress view
                 VStack(spacing: 16) {
                     
@@ -518,6 +599,7 @@ struct SolidProgress_Previews: PreviewProvider {
         }
     }
     
+    // MARK: - Helpers
     static func description(text: String) -> some View {
         Text(text)
             .textCase(.uppercase)

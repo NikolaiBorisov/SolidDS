@@ -26,8 +26,8 @@ struct SolidProgressDemoView: View {
             SolidProgress(
                 value: progress,
                 valueFormat: .decimal(places: 1, percent: true),
-                style: .capsule,
-                progressStyle: .linear
+                valueStyle: .capsule,
+                progressType: .linear
             )
             
             controls
