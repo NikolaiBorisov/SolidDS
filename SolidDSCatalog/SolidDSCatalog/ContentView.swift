@@ -13,22 +13,26 @@ struct ContentView: View {
         NavigationStack {
             List {
                 HStack {
-                    Image(systemName: "square.grid.3x3.square")
-                        .imageScale(.large)
-                        .foregroundStyle(.tint)
-                    
-                    Text("Hello, SolidDS!")
+                    Spacer()
+                    Text("SolidProgress")
+                    Spacer()
                 }
                 NavigationLink {
                     SolidProgressDemoView(controlType: .buttons)
                 } label: {
-                    Text("Progress [Buttons]")
+                    Text("Progress (Buttons)")
                         .foregroundColor(.accentColor)
                 }
                 NavigationLink {
                     SolidProgressDemoView(controlType: .slider)
                 } label: {
-                    Text("Progress [Slider]")
+                    Text("Progress (Slider)")
+                        .foregroundColor(.accentColor)
+                }
+                NavigationLink {
+                    SolidProgressAllTypesDemoView()
+                } label: {
+                    Text("All Progress Types")
                         .foregroundColor(.accentColor)
                 }
             }
