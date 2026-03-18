@@ -182,6 +182,93 @@ struct SolidProgressAllTypesDemoView: View {
                 
                 Divider().padding(.vertical)
                 
+                // Vertical progress view
+                VStack(spacing: 16) {
+                    
+                    description(text: "Vertical progress view")
+                    
+                    HStack {
+                        SolidProgress(
+                            value: 0.5,
+                            valuePosition: .leading,
+                            orientation: .vertical,
+                            customProgressContainerHeight: 100
+                        )
+                        Spacer()
+                    }
+                    
+                    HStack {
+                        Spacer()
+                        SolidProgress(
+                            value: 0.5,
+                            valuePosition: .trailing,
+                            orientation: .vertical,
+                            customProgressContainerHeight: 100
+                        )
+                    }
+                    
+                    HStack {
+                        SolidProgress(
+                            value: 0.5,
+                            valuePosition: .top,
+                            orientation: .vertical,
+                            customProgressContainerHeight: 100
+                        )
+                        Spacer()
+                    }
+                    
+                    HStack {
+                        SolidProgress(
+                            value: 0.5,
+                            valuePosition: .bottom,
+                            orientation: .vertical,
+                            customProgressContainerHeight: 100
+                        )
+                        Spacer()
+                    }
+                    
+                    HStack {
+                        SolidProgress(
+                            value: 0.5,
+                            valuePosition: .overlayCenter,
+                            orientation: .vertical,
+                            valueStyle: .capsule,
+                            customProgressContainerHeight: 100,
+                            capsuleBgColor: .accentColor,
+                            capsuleBorderColor: .primary
+                        )
+                        Spacer()
+                    }
+                    
+                    HStack {
+                        SolidProgress(
+                            value: 0.5,
+                            valuePosition: .overlayLeading,
+                            orientation: .vertical,
+                            valueStyle: .capsule,
+                            customProgressContainerHeight: 100,
+                            capsuleBgColor: .accentColor,
+                            capsuleBorderColor: .primary
+                        )
+                        Spacer()
+                    }
+                    
+                    HStack {
+                        Spacer()
+                        SolidProgress(
+                            value: 0.5,
+                            valuePosition: .overlayTrailing,
+                            orientation: .vertical,
+                            valueStyle: .capsule,
+                            customProgressContainerHeight: 100,
+                            capsuleBgColor: .accentColor,
+                            capsuleBorderColor: .primary,
+                        )
+                    }
+                }
+                
+                Divider().padding(.vertical)
+                
                 // Circular progress view
                 VStack(spacing: 16) {
                     
