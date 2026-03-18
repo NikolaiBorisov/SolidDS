@@ -13,7 +13,6 @@ struct ContentView: View {
         NavigationStack {
             List {
                 HStack {
-                    Spacer()
                     Text("SolidProgress")
                     Spacer()
                 }
