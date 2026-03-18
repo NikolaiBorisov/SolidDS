@@ -166,21 +166,62 @@ public struct SolidProgress: View {
 extension SolidProgress {
     
     var content: some View {
-        
+        Group {
+            if orientation == .horizontal {
+                horizontalLayout
+            } else {
+                verticalLayout
+            }
+        }
+        .padding(progressPadding)
+        .animation(.easeInOut(duration: 0.25), value: value)
+    }
+    
+    var horizontalLayout: some View {
         Group {
             switch valuePosition {
-                
             case .leading:
                 HStack(spacing: contentSpacing) {
                     valueView
                     progressView
                 }
-                
             case .trailing:
                 HStack(spacing: contentSpacing) {
                     progressView
                     valueView
                 }
+            case .top:
+                VStack(spacing: contentSpacing) {
+                    valueView
+                    progressView
+                }
+            case .bottom:
+                VStack(spacing: contentSpacing) {
+                    progressView
+                    valueView
+                }
+            case .overlayLeading:
+                ZStack(alignment: .leading) {
+                    progressView
+                    valueView
+                }
+            case .overlayTrailing:
+                ZStack(alignment: .trailing) {
+                    progressView
+                    valueView
+                }
+            case .overlayCenter:
+                ZStack {
+                    progressView
+                    valueView
+                }
+            }
+        }
+    }
+    
+    var verticalLayout: some View {
+        Group {
+            switch valuePosition {
                 
             case .top:
                 VStack(spacing: contentSpacing) {
@@ -191,6 +232,20 @@ extension SolidProgress {
             case .bottom:
                 VStack(spacing: contentSpacing) {
                     progressView
+                    valueView
+                }
+                
+            case .leading: // LEFT of vertical bar
+                HStack(spacing: contentSpacing) {
+                    valueView
+                    progressView
+                        .frame(width: progressTrackHeight)
+                }
+                
+            case .trailing: // RIGHT of vertical bar
+                HStack(spacing: contentSpacing) {
+                    progressView
+                        .frame(width: progressTrackHeight)
                     valueView
                 }
                 
@@ -213,8 +268,6 @@ extension SolidProgress {
                 }
             }
         }
-        .padding(progressPadding)
-        .animation(.easeInOut(duration: 0.25), value: value)
     }
     
     var valueView: some View {
@@ -237,6 +290,16 @@ extension SolidProgress {
                     height: progressTrackHeight,
                     tint: progressTint,
                     trackColor: progressTrackColor
+                )
+                .rotationEffect(orientation == .vertical ? .degrees(-90) : .degrees(0))
+                .frame(
+                    maxWidth: orientation == .horizontal ? .infinity : nil
+                )
+                .frame(
+                    width: orientation == .vertical ? customProgressContainerHeight : nil,
+                    height: orientation == .vertical
+                    ? (customProgressContainerHeight ?? defaultVerticalHeight)
+                    : progressContainerHeight
                 )
                 
             case .circular:
@@ -270,7 +333,6 @@ extension SolidProgress {
                 )
             )
             .foregroundStyle(valueColor)
-            .animation(.easeInOut(duration: 0.25), value: value)
     }
     
     func dividerView(_ divider: SolidProgressDivider) -> some View {
@@ -304,6 +366,14 @@ private extension SolidProgress {
         case .small: return 6
         case .medium: return 8
         case .large: return 10
+        }
+    }
+    
+    var defaultVerticalHeight: CGFloat {
+        switch size {
+        case .small: return 40
+        case .medium: return 60
+        case .large: return 80
         }
     }
     
@@ -558,6 +628,93 @@ struct SolidProgress_Previews: PreviewProvider {
                         capsuleBgColor: .accentColor,
                         capsuleBorderColor: .primary
                     )
+                }
+                
+                Divider().padding(.vertical)
+                
+                // Vertical progress view
+                VStack(spacing: 16) {
+                    
+                    description(text: "Vertical progress view")
+                    
+                    HStack {
+                        SolidProgress(
+                            value: 0.5,
+                            valuePosition: .leading,
+                            orientation: .vertical,
+                            customProgressContainerHeight: 100
+                        )
+                        Spacer()
+                    }
+                    
+                    HStack {
+                        Spacer()
+                        SolidProgress(
+                            value: 0.5,
+                            valuePosition: .trailing,
+                            orientation: .vertical,
+                            customProgressContainerHeight: 100
+                        )
+                    }
+                    
+                    HStack {
+                        SolidProgress(
+                            value: 0.5,
+                            valuePosition: .top,
+                            orientation: .vertical,
+                            customProgressContainerHeight: 100
+                        )
+                        Spacer()
+                    }
+                    
+                    HStack {
+                        SolidProgress(
+                            value: 0.5,
+                            valuePosition: .bottom,
+                            orientation: .vertical,
+                            customProgressContainerHeight: 100
+                        )
+                        Spacer()
+                    }
+                    
+                    HStack {
+                        SolidProgress(
+                            value: 0.5,
+                            valuePosition: .overlayCenter,
+                            orientation: .vertical,
+                            valueStyle: .capsule,
+                            customProgressContainerHeight: 100,
+                            capsuleBgColor: .accentColor,
+                            capsuleBorderColor: .primary
+                        )
+                        Spacer()
+                    }
+                    
+                    HStack {
+                        SolidProgress(
+                            value: 0.5,
+                            valuePosition: .overlayLeading,
+                            orientation: .vertical,
+                            valueStyle: .capsule,
+                            customProgressContainerHeight: 100,
+                            capsuleBgColor: .accentColor,
+                            capsuleBorderColor: .primary
+                        )
+                        Spacer()
+                    }
+                    
+                    HStack {
+                        Spacer()
+                        SolidProgress(
+                            value: 0.5,
+                            valuePosition: .overlayTrailing,
+                            orientation: .vertical,
+                            valueStyle: .capsule,
+                            customProgressContainerHeight: 100,
+                            capsuleBgColor: .accentColor,
+                            capsuleBorderColor: .primary,
+                        )
+                    }
                 }
                 
                 Divider().padding(.vertical)
