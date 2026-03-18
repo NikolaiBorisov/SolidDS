@@ -33,6 +33,16 @@ File → Add Package Dependencies
 https://github.com/NikolaiBorisov/SolidDS
 ```
 
+## Highlight: SolidProgress
+
+A highly customizable SwiftUI progress component supporting:
+
+- Linear and circular styles
+- Horizontal and vertical orientation
+- Flexible value positioning (leading, trailing, top, bottom, overlay)
+- Capsule and text value styles
+- Customizable colors, spacing, and sizes
+  
 ## Usage
 
 ```swift
@@ -55,3 +65,10 @@ struct ContentView: View {
 
 - Progress indicators
 - Reusable UI primitives
+
+## Why SolidDS?
+
+SolidDS helps you build consistent SwiftUI apps faster by providing 
+ready-to-use components with flexible APIs and sensible defaults.
+
+It’s designed to scale from simple apps to full design systems.
