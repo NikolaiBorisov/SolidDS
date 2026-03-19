@@ -52,9 +52,12 @@ public struct SolidProgress: View {
     
     // MARK: - Capsule Styling
     private let capsulePadding: EdgeInsets
-    private let capsuleBgColor: Color
+    private let capsuleBgColor: AnyShapeStyle
     private let capsuleBorderColor: Color
     private let capsuleBorderWidth: CGFloat
+    private let capsuleGlassStyle: SolidProgressGlassStyle
+    private let capsuleBackgroundImage: Image?
+    private let capsuleGlassColors: [Color]?
     
     // MARK: - Customization
     private let customFont: Font?
@@ -91,9 +94,12 @@ public struct SolidProgress: View {
         customFont: Font? = nil,
         
         capsulePadding: EdgeInsets = ProgressDefaults.capsulePadding,
-        capsuleBgColor: Color = .secondary.opacity(0.15),
+        capsuleBgColor: AnyShapeStyle = AnyShapeStyle(.secondary.opacity(0.15)),
         capsuleBorderColor: Color = .accentColor,
         capsuleBorderWidth: CGFloat = 1,
+        capsuleGlassStyle: SolidProgressGlassStyle = .none,
+        capsuleBackgroundImage: Image? = nil,
+        capsuleGlassColors: [Color]? = nil,
         
         customCircularScale: CGFloat? = 1,
         customCircularContainerSize: CGFloat? = nil,
@@ -125,6 +131,9 @@ public struct SolidProgress: View {
         self.capsuleBgColor = capsuleBgColor
         self.capsuleBorderColor = capsuleBorderColor
         self.capsuleBorderWidth = capsuleBorderWidth
+        self.capsuleGlassStyle = capsuleGlassStyle
+        self.capsuleBackgroundImage = capsuleBackgroundImage
+        self.capsuleGlassColors = capsuleGlassColors
         
         self.customCircularScale = customCircularScale
         self.customCircularContainerSize = customCircularContainerSize
@@ -139,7 +148,42 @@ public struct SolidProgress: View {
         VStack(spacing: 0) {
             content
         }
-        .background(container.background)
+        .background(
+            ZStack {
+                Group {
+                    switch container.glassStyle {
+                    case .none:
+                        RoundedRectangle(cornerRadius: container.cornerRadius)
+                            .fill(container.background)
+                        
+                    case .ultraThin:
+                        RoundedRectangle(cornerRadius: container.cornerRadius)
+                            .fill(container.background)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: container.cornerRadius)
+                                    .fill(
+                                        LinearGradient(
+                                            colors: container.glassColors ?? [
+                                                Color.white.opacity(0.25),
+                                                Color.white.opacity(0.05)
+                                            ],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
+                            )
+                    }
+                }
+                
+                if let image = container.backgroundImage {
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .clipShape(RoundedRectangle(cornerRadius: container.cornerRadius))
+                        .opacity(0.9)
+                }
+            }
+        )
         .clipShape(RoundedRectangle(cornerRadius: container.cornerRadius))
         .overlay(
             RoundedRectangle(cornerRadius: container.cornerRadius)
@@ -325,12 +369,44 @@ extension SolidProgress {
         Text(formattedValue)
             .font(font)
             .padding(capsulePadding)
-            .background(Capsule().fill(capsuleBgColor))
+            .background(
+                Capsule()
+                    .fill(capsuleBgColor)
+                    .overlay(
+                        // Glass effect on top of fill
+                        Group {
+                            if capsuleGlassStyle == .ultraThin {
+                                Capsule()
+                                    .fill(
+                                        LinearGradient(
+                                            colors: capsuleGlassColors ?? [
+                                                Color.white.opacity(0.25),
+                                                Color.white.opacity(0.05)
+                                            ],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
+                            }
+                        }
+                    )
+                    .background(
+                        // Image behind fill, clipped to capsule frame
+                        GeometryReader { geo in
+                            if let image = capsuleBackgroundImage {
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: geo.size.width, height: geo.size.height)
+                                    .clipShape(Capsule())
+                            }
+                        }
+                    )
+            )
             .overlay(
-                Capsule().stroke(
-                    capsuleBorderColor,
-                    lineWidth: capsuleBorderWidth
-                )
+                // Border on top
+                Capsule()
+                    .stroke(capsuleBorderColor.opacity(0.3), lineWidth: capsuleBorderWidth)
             )
             .foregroundStyle(valueColor)
     }
@@ -464,306 +540,315 @@ private extension SolidProgress {
 // MARK: - Previews
 struct SolidProgress_Previews: PreviewProvider {
     static var previews: some View {
-        ScrollView {
-            VStack(alignment: .center, spacing: 16) {
-                // Simple progress view no %
-                description(text: "Simple progress view no %")
-                
-                SolidProgress(
-                    value: 0.77,
-                    valueFormat: .integer(percent: false),
-                )
-                
-                SolidProgress(
-                    value: 0.77,
-                    valueFormat: .decimal(places: 1, percent: false),
-                )
-                
-                SolidProgress(
-                    value: 0.77,
-                    valueFormat: .decimal(places: 2, percent: false),
-                )
-                
-                SolidProgress(
-                    value: 0.77,
-                    valueFormat: .decimal(places: 3, percent: false),
-                )
-                
-                Divider().padding(.vertical)
-                
-                // Simple progress view with %
-                description(text: "Simple progress view with %")
-                
-                SolidProgress(
-                    value: 0.77,
-                    valueFormat: .integer(percent: true),
-                )
-                
-                SolidProgress(
-                    value: 0.77,
-                    valueFormat: .decimal(places: 1, percent: true),
-                )
-                
-                SolidProgress(
-                    value: 0.77,
-                    valueFormat: .decimal(places: 2, percent: true),
-                )
-                
-                SolidProgress(
-                    value: 0.77,
-                    valueFormat: .decimal(places: 3, percent: true),
-                )
-                
-                Divider().padding(.vertical)
-                
-                // Capsule progress view
-                description(text: "Capsule progress view")
-                
-                SolidProgress(
-                    value: 0.77,
-                    valueFormat: .integer(percent: false),
-                    valueStyle: .capsule,
-                )
-                
-                SolidProgress(
-                    value: 0.77,
-                    valueFormat: .decimal(places: 1, percent: false),
-                    valueStyle: .capsule,
-                )
-                
-                SolidProgress(
-                    value: 0.77,
-                    valueFormat: .decimal(places: 1, percent: true),
-                    valueStyle: .capsule,
-                )
-                
-                SolidProgress(
-                    value: 0.77,
-                    valueFormat: .decimal(places: 2, percent: true),
-                    valueStyle: .capsule,
-                )
-                
-                // Card container progress view
-                description(text: "Card container progress view")
-                
-                SolidProgress(
-                    value: 0.77,
-                    valueFormat: .decimal(places: 1, percent: false),
-                    valueStyle: .capsule,
-                    container: .init(
-                        background: AnyShapeStyle(.regularMaterial),
-                        cornerRadius: 16,
-                        borderColor: .accentColor,
-                        borderWidth: 1
-                    ),
-                    topDivider: .init(
-                        color: .clear,
-                        height: 0,
-                        padding: .init(top: 0, leading: 0, bottom: 0, trailing: 0)
-                    ),
-                    bottomDivider: .init(
-                        color: .clear,
-                        height: 0,
-                        padding: .init(top: 0, leading: 0, bottom: 0, trailing: 0)
-                    )
-                )
-                
-                SolidProgress(
-                    value: 0.77,
-                    valueFormat: .decimal(places: 2, percent: true),
-                    valueStyle: .capsule,
-                    container: .init(
-                        background: AnyShapeStyle(.regularMaterial),
-                        cornerRadius: 16,
-                        borderColor: .accentColor,
-                        borderWidth: 1
-                    ),
-                    capsuleBgColor: .green,
-                    topDivider: nil,
-                    bottomDivider: nil
-                )
-                
-                Divider().padding(.vertical)
-                
-                // Progress Value Placement
-                VStack(spacing: 16) {
-                    
-                    description(text: "Progress Value Placement")
-                    
-                    SolidProgress(
-                        value: 0.7,
-                        valuePosition: .leading
-                    )
-                    
-                    SolidProgress(
-                        value: 0.7,
-                        valuePosition: .top
-                    )
-                    
-                    SolidProgress(
-                        value: 0.7,
-                        valuePosition: .bottom
-                    )
-                    
-                    SolidProgress(
-                        value: 0.7,
-                        valuePosition: .overlayCenter,
-                        valueStyle: .capsule,
-                        capsuleBgColor: .accentColor,
-                        capsuleBorderColor: .primary
-                    )
-                    
-                    SolidProgress(
-                        value: 0.7,
-                        valuePosition: .overlayLeading,
-                        valueStyle: .capsule,
-                        capsuleBgColor: .accentColor,
-                        capsuleBorderColor: .primary
-                    )
-                    
-                    SolidProgress(
-                        value: 0.7,
-                        valuePosition: .overlayTrailing,
-                        valueStyle: .capsule,
-                        capsuleBgColor: .accentColor,
-                        capsuleBorderColor: .primary
-                    )
+        NavigationView {
+            List {
+                Section("Simple progress view no %") {
+                    NavigationLink("Integer") {
+                        SolidProgress(value: 0.77, valueFormat: .integer(percent: false))
+                            .padding(.vertical)
+                        Spacer()
+                    }
+                    NavigationLink("Decimal 1 place") {
+                        SolidProgress(value: 0.77, valueFormat: .decimal(places: 1, percent: false))
+                            .padding(.vertical)
+                        Spacer()
+                    }
+                    NavigationLink("Decimal 2 places") {
+                        SolidProgress(value: 0.77, valueFormat: .decimal(places: 2, percent: false))
+                            .padding(.vertical)
+                        Spacer()
+                    }
+                    NavigationLink("Decimal 3 places") {
+                        SolidProgress(value: 0.77, valueFormat: .decimal(places: 3, percent: false))
+                            .padding(.vertical)
+                        Spacer()
+                    }
                 }
                 
-                Divider().padding(.vertical)
+                Section("Simple progress view with %") {
+                    NavigationLink("Integer") {
+                        SolidProgress(value: 0.77, valueFormat: .integer(percent: true))
+                            .padding(.vertical)
+                        Spacer()
+                    }
+                    NavigationLink("Decimal 1 place") {
+                        SolidProgress(value: 0.77, valueFormat: .decimal(places: 1, percent: true))
+                            .padding(.vertical)
+                        Spacer()
+                    }
+                    NavigationLink("Decimal 2 places") {
+                        SolidProgress(value: 0.77, valueFormat: .decimal(places: 2, percent: true))
+                            .padding(.vertical)
+                        Spacer()
+                    }
+                    NavigationLink("Decimal 3 places") {
+                        SolidProgress(value: 0.77, valueFormat: .decimal(places: 3, percent: true))
+                            .padding(.vertical)
+                        Spacer()
+                    }
+                }
                 
-                // Vertical progress view
-                VStack(spacing: 16) {
-                    
-                    description(text: "Vertical progress view")
-                    
-                    HStack {
+                Section("Capsule progress view") {
+                    NavigationLink("Integer") {
+                        SolidProgress(value: 0.77, valueFormat: .integer(percent: false), valueStyle: .capsule)
+                            .padding(.vertical)
+                        Spacer()
+                    }
+                    NavigationLink("Decimal 1 place") {
+                        SolidProgress(value: 0.77, valueFormat: .decimal(places: 1, percent: false), valueStyle: .capsule)
+                            .padding(.vertical)
+                        Spacer()
+                    }
+                    NavigationLink("Decimal 2 places with %") {
+                        SolidProgress(value: 0.77, valueFormat: .decimal(places: 2, percent: true), valueStyle: .capsule)
+                            .padding(.vertical)
+                        Spacer()
+                    }
+                    NavigationLink("UltraThinMaterial") {
+                        VStack {
+                            SolidProgress(
+                                value: 0.77,
+                                valueStyle: .capsule,
+                                capsuleBgColor: AnyShapeStyle(.ultraThinMaterial),
+                                capsuleBorderColor: .blue,
+                                capsuleGlassStyle: .ultraThin
+                            )
+                            
+                            SolidProgress(
+                                value: 0.77,
+                                valueStyle: .capsule,
+                                capsuleBgColor: AnyShapeStyle(.ultraThinMaterial),
+                                capsuleBorderColor: .blue,
+                                capsuleGlassStyle: .ultraThin,
+                                capsuleGlassColors: [
+                                    Color.red.opacity(0.3),
+                                    Color.orange.opacity(0.1)
+                                ]
+                            )
+                        }
+                        .padding(.vertical)
+                        Spacer()
+                    }
+                    NavigationLink("Capsule BG Image") {
+                        SolidProgress(
+                            value: 0.77,
+                            valueColor: .black,
+                            valueStyle: .capsule,
+                            capsuleBgColor: AnyShapeStyle(.clear),
+                            capsuleBorderColor: .blue,
+                            capsuleGlassStyle: .none,
+                            capsuleBackgroundImage: Image(.progressBgImg)
+                        )
+                        .padding(.vertical)
+                        Spacer()
+                    }
+                }
+                
+                Section("Card container progress view") {
+                    NavigationLink("Clear") {
+                        SolidProgress(
+                            value: 0.77,
+                            valueFormat: .decimal(places: 1, percent: false),
+                            valueStyle: .capsule,
+                            container: .init(
+                                background: AnyShapeStyle(.clear),
+                                cornerRadius: 16,
+                                borderColor: .accentColor,
+                                borderWidth: 1,
+                                glassStyle: .none
+                            ),
+                            topDivider: nil,
+                            bottomDivider: nil
+                        )
+                        .padding()
+                        Spacer()
+                    }
+                    NavigationLink("RegularMaterial") {
+                        SolidProgress(
+                            value: 0.77,
+                            valueFormat: .decimal(places: 2, percent: true),
+                            valueStyle: .capsule,
+                            container: .init(
+                                background: AnyShapeStyle(.regularMaterial),
+                                cornerRadius: 16,
+                                borderColor: .accentColor,
+                                borderWidth: 1,
+                                glassStyle: .none
+                            ),
+                            capsuleBgColor: AnyShapeStyle(.green),
+                            topDivider: nil,
+                            bottomDivider: nil
+                        )
+                        .padding()
+                        Spacer()
+                    }
+                    NavigationLink("UltraThinMaterial") {
+                        VStack {
+                            SolidProgress(
+                                value: 0.77,
+                                valueFormat: .decimal(places: 3, percent: true),
+                                valueStyle: .capsule,
+                                container: .init(
+                                    background: AnyShapeStyle(.ultraThinMaterial),
+                                    cornerRadius: 16,
+                                    borderColor: .accentColor,
+                                    borderWidth: 1,
+                                    glassStyle: .ultraThin
+                                ),
+                                capsuleBgColor: AnyShapeStyle(.ultraThinMaterial),
+                                capsuleGlassStyle: .ultraThin,
+                                topDivider: nil,
+                                bottomDivider: nil
+                            )
+                            
+                            SolidProgress(
+                                value: 0.88,
+                                valueFormat: .decimal(places: 2, percent: true),
+                                valueStyle: .capsule,
+                                container: .init(
+                                    background: AnyShapeStyle(.ultraThinMaterial),
+                                    cornerRadius: 16,
+                                    borderColor: .accentColor,
+                                    borderWidth: 1,
+                                    glassStyle: .ultraThin,
+                                    glassColors: [
+                                        Color.red.opacity(0.3),
+                                        Color.orange.opacity(0.1)
+                                    ]
+                                ),
+                                capsuleBgColor: AnyShapeStyle(.ultraThinMaterial),
+                                capsuleGlassStyle: .ultraThin,
+                                topDivider: nil,
+                                bottomDivider: nil
+                            )
+                        }
+                        .padding()
+                        Spacer()
+                    }
+                    NavigationLink("BG Image") {
+                        VStack {
+                            SolidProgress(
+                                value: 0.77,
+                                valueFormat: .decimal(places: 3, percent: true),
+                                valueStyle: .capsule,
+                                progressTint: .red,
+                                container: .init(
+                                    background: AnyShapeStyle(.regularMaterial),
+                                    backgroundImage: Image(.progressBgImg),
+                                    cornerRadius: 16,
+                                    borderColor: .accentColor,
+                                    borderWidth: 1,
+                                    glassStyle: .none
+                                ),
+                                progressTrackColor: .gray,
+                                capsuleBgColor: AnyShapeStyle(.regularMaterial),
+                                capsuleGlassStyle: .none,
+                                topDivider: nil,
+                                bottomDivider: nil
+                            )
+                            
+                            SolidProgress(
+                                value: 0.77,
+                                valueColor: .black,
+                                valueStyle: .capsule,
+                                capsuleBgColor: AnyShapeStyle(.clear),
+                                capsuleBorderColor: .blue,
+                                capsuleGlassStyle: .none,
+                                capsuleBackgroundImage: Image(.progressBgImg)
+                            )
+                        }
+                        .padding()
+                        Spacer()
+                    }
+                }
+                
+                Section("Vertical progress view") {
+                    NavigationLink("Vertical leading") {
                         SolidProgress(
                             value: 0.5,
                             valuePosition: .leading,
                             orientation: .vertical,
                             customProgressContainerHeight: 100
                         )
+                        .padding(.vertical)
                         Spacer()
                     }
-                    
-                    HStack {
-                        Spacer()
+                    NavigationLink("Vertical trailing") {
                         SolidProgress(
                             value: 0.5,
                             valuePosition: .trailing,
                             orientation: .vertical,
                             customProgressContainerHeight: 100
                         )
-                    }
-                    
-                    HStack {
-                        SolidProgress(
-                            value: 0.5,
-                            valuePosition: .top,
-                            orientation: .vertical,
-                            customProgressContainerHeight: 100
-                        )
+                        .padding(.vertical)
                         Spacer()
                     }
-                    
-                    HStack {
-                        SolidProgress(
-                            value: 0.5,
-                            valuePosition: .bottom,
-                            orientation: .vertical,
-                            customProgressContainerHeight: 100
-                        )
-                        Spacer()
-                    }
-                    
-                    HStack {
+                    NavigationLink("Vertical overlayCenter") {
                         SolidProgress(
                             value: 0.5,
                             valuePosition: .overlayCenter,
                             orientation: .vertical,
                             valueStyle: .capsule,
                             customProgressContainerHeight: 100,
-                            capsuleBgColor: .accentColor,
+                            capsuleBgColor: AnyShapeStyle(Color.accentColor),
                             capsuleBorderColor: .primary
                         )
+                        .padding(.vertical)
                         Spacer()
                     }
-                    
-                    HStack {
+                    NavigationLink("Vertical top") {
                         SolidProgress(
                             value: 0.5,
-                            valuePosition: .overlayLeading,
+                            valuePosition: .top,
                             orientation: .vertical,
-                            valueStyle: .capsule,
-                            customProgressContainerHeight: 100,
-                            capsuleBgColor: .accentColor,
-                            capsuleBorderColor: .primary
+                            customProgressContainerHeight: 100
                         )
+                        .padding(.vertical)
                         Spacer()
                     }
-                    
-                    HStack {
-                        Spacer()
+                    NavigationLink("Vertical bottom") {
                         SolidProgress(
                             value: 0.5,
-                            valuePosition: .overlayTrailing,
+                            valuePosition: .bottom,
                             orientation: .vertical,
-                            valueStyle: .capsule,
-                            customProgressContainerHeight: 100,
-                            capsuleBgColor: .accentColor,
-                            capsuleBorderColor: .primary,
+                            customProgressContainerHeight: 100
                         )
+                        .padding(.vertical)
+                        Spacer()
                     }
                 }
                 
-                Divider().padding(.vertical)
-                
-                // Circular progress view
-                VStack(spacing: 16) {
-                    
-                    description(text: "Circular progress view")
-                    
-                    SolidProgress(
-                        value: 0.0,
-                        progressTint: .red,
-                        progressType: .circular,
-                        customCircularScale: 0.5
-                    )
-                    
-                    SolidProgress(
-                        value: 0.0,
-                        progressTint: .green,
-                        progressType: .circular,
-                        container: .init(
-                            background: AnyShapeStyle(.secondary),
-                            cornerRadius: 20,
-                            borderColor: .primary,
-                            borderWidth: 1
-                        ),
-                        customCircularScale: 1.0
-                    )
-                    
-                    SolidProgress(
-                        value: 0.0,
-                        progressTint: .blue,
-                        progressType: .circular,
-                        customCircularScale: 2
-                    )
+                Section("Circular progress view") {
+                    NavigationLink("Circular small red") {
+                        SolidProgress(
+                            value: 0.0,
+                            progressTint: .red,
+                            progressType: .circular,
+                            customCircularScale: 0.5
+                        )
+                        .padding(.vertical)
+                        Spacer()
+                    }
+                    NavigationLink("Circular green card") {
+                        SolidProgress(
+                            value: 0.0,
+                            progressTint: .green,
+                            progressType: .circular,
+                            container: .init(
+                                background: AnyShapeStyle(.secondary),
+                                cornerRadius: 20,
+                                borderColor: .primary,
+                                borderWidth: 1
+                            ),
+                            customCircularScale: 1.0
+                        )
+                        .padding(.vertical)
+                        Spacer()
+                    }
                 }
             }
-            .padding()
+            .navigationTitle("Progress Previews")
+            .listStyle(.insetGrouped)
         }
-    }
-    
-    // MARK: - Helpers
-    static func description(text: String) -> some View {
-        Text(text)
-            .textCase(.uppercase)
-            .font(.caption2)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .multilineTextAlignment(.leading)
-            .foregroundStyle(.secondary)
-            .padding(.leading, 8)
     }
 }
