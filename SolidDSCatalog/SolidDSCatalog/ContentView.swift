@@ -10,34 +10,7 @@ import SolidDS
 
 struct ContentView: View {
     var body: some View {
-        NavigationStack {
-            List {
-                HStack {
-                    Text("SolidProgress")
-                    Spacer()
-                }
-                NavigationLink {
-                    SolidProgressDemoView(controlType: .buttons)
-                } label: {
-                    Text("Progress (Buttons)")
-                        .foregroundColor(.accentColor)
-                }
-                NavigationLink {
-                    SolidProgressDemoView(controlType: .slider)
-                } label: {
-                    Text("Progress (Slider)")
-                        .foregroundColor(.accentColor)
-                }
-                NavigationLink {
-                    SolidProgressAllTypesDemoView()
-                } label: {
-                    Text("All Progress Types")
-                        .foregroundColor(.accentColor)
-                }
-            }
-            .padding(.top)
-            .navigationTitle("SolidDS Catalog")
-        }
+        SolidProgressAllTypesDemoView()
     }
 }
 
