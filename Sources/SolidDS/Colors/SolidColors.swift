@@ -9,8 +9,8 @@ import SwiftUI
 
 public enum SolidColors {
 
-    public static let primary = Color.blue
-    public static let background = Color(.systemBackground)
+    public static let blue = Color.blue
+    public static let systemBackground = Color(.systemBackground)
     public static let textPrimary = Color.primary
 
 }
