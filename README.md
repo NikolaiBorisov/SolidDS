@@ -76,7 +76,6 @@ Here’s a preview of the `SolidProgress` component in action:
 ![SolidProgress Demo 4](Assets/Screenshots/img_4.jpeg)
 ![SolidProgress Demo 5](Assets/Screenshots/img_5.jpeg)
 ![SolidProgress Demo 6](Assets/Screenshots/img_6.jpeg)
-![SolidProgress Demo 7](Assets/Screenshots/img_7.jpeg)
 
 ## Why SolidDS?
 
