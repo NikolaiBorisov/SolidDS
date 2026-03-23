@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+/// Defines the position of the progress value relative to the progress view.
+///
+/// Supports both external (leading, trailing, top, bottom) and overlay (inside the progress container) placements.
 public enum SolidProgressValuePosition {
     case leading
     case trailing

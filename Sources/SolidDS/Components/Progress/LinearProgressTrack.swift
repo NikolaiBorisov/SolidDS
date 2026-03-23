@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+/// A linear progress track that visually represents progress as a filled bar.
+///
+/// Uses a background track with a leading-aligned fill based on the current progress
 struct LinearProgressTrack: View {
     
     var progress: Double
@@ -32,3 +35,17 @@ struct LinearProgressTrack: View {
         .clipped()
     }
 }
+
+// MARK: - 🧠 Code for Thought
+/*
+ `LinearProgressTrack` focuses solely on rendering the progress bar.
+
+ - Uses `GeometryReader` to adapt fill width dynamically
+ - Separates track (background) and fill (foreground) for clarity
+ - Keeps logic minimal and purely visual (SRP)
+
+ Benefits:
+ - Simple and predictable rendering
+ - Easy to customize and reuse
+ - Decoupled from layout and higher-level components
+ */

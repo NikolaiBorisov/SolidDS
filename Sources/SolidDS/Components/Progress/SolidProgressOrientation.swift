@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+/// Defines the layout direction of the progress indicator.
+///
+/// Use `.horizontal` for left-to-right progress or `.vertical` for bottom-to-top progress.
 public enum SolidProgressOrientation {
     case horizontal
     case vertical
