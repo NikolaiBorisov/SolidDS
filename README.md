@@ -53,8 +53,7 @@ struct ContentView: View {
         SolidProgress(
             value: 0.77,
             valueFormat: .integer(percent: false),
-            valueColor: .blue,
-            progressType: .linear
+            valueColor: .blue
         )
         .padding()
     }
