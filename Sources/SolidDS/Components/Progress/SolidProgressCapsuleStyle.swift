@@ -8,6 +8,7 @@
 import SwiftUI
 
 /// A style struct that defines the visual appearance of a capsule in `SolidProgress`.
+/// 
 /// Encapsulates background, border, glass effect, and padding.
 public struct SolidProgressCapsuleStyle {
     
@@ -52,7 +53,7 @@ public struct SolidProgressCapsuleStyle {
     }
 }
 
-// MARK: - 🧠 Design Philosophy
+// MARK: - 🧠 Code for Thought
 /*
  MARK: - Architecture: Capsule Styling
  

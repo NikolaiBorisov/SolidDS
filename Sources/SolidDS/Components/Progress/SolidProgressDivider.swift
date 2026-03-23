@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+/// Defines a divider used within `SolidProgress`.
+///
+/// Allows customization of color, thickness, and spacing.
 public struct SolidProgressDivider {
     public var color: Color
     public var height: CGFloat

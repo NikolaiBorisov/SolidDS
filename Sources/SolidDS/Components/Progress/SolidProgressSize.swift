@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+/// Defines predefined size variants for `SolidProgress`.
+///
+/// Controls overall dimensions such as spacing and track thickness.
 public enum SolidProgressSize {
     case small
     case medium
