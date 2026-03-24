@@ -51,8 +51,7 @@ import SolidDS
 struct ContentView: View {
     var body: some View {
         SolidProgress(
-            progress: .init(value: 0.77, format: .integer(percent: false)),
-            valueColor: .blue
+            progress: .init(value: 0.77, format: .integer(percent: false))
         )
         .padding()
     }
