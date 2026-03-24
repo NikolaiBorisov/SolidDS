@@ -19,10 +19,8 @@ struct SolidProgressAllTypesDemoView: View {
                     NavigationLink("Integer & Decimal previews") {
                         ScrollView {
                             VStack(spacing: 12) {
-                                SolidProgress(value: 0.77, valueFormat: .integer(percent: false))
-                                SolidProgress(value: 0.77, valueFormat: .decimal(places: 1, percent: false))
-                                SolidProgress(value: 0.77, valueFormat: .decimal(places: 2, percent: false))
-                                SolidProgress(value: 0.77, valueFormat: .decimal(places: 3, percent: false))
+                                SolidProgress(progress: .init(value: 0.77, format: .integer(percent: false)))
+                                SolidProgress(progress: .init(value: 0.77, format: .decimal(places: 3, percent: false)))
                             }
                             .padding(.vertical)
                             Spacer()
@@ -34,10 +32,8 @@ struct SolidProgressAllTypesDemoView: View {
                     NavigationLink("Integer & Decimal previews") {
                         ScrollView {
                             VStack(spacing: 12) {
-                                SolidProgress(value: 0.77, valueFormat: .integer(percent: true))
-                                SolidProgress(value: 0.77, valueFormat: .decimal(places: 1, percent: true))
-                                SolidProgress(value: 0.77, valueFormat: .decimal(places: 2, percent: true))
-                                SolidProgress(value: 0.77, valueFormat: .decimal(places: 3, percent: true))
+                                SolidProgress(progress: .init(value: 0.77, format: .integer(percent: true)))
+                                SolidProgress(progress: .init(value: 0.77, format: .decimal(places: 3, percent: true)))
                             }
                             .padding(.vertical)
                             Spacer()
@@ -50,31 +46,11 @@ struct SolidProgressAllTypesDemoView: View {
                         ScrollView {
                             VStack(spacing: 12) {
                                 SolidProgress(
-                                    value: 0.77,
-                                    valueFormat: .integer(percent: false),
+                                    progress: .init(value: 0.77, format: .integer(percent: false)),
                                     valueStyle: .capsule
                                 )
                                 SolidProgress(
-                                    value: 0.77,
-                                    valueFormat: .decimal(places: 1, percent: false),
-                                    valueStyle: .capsule
-                                )
-                                SolidProgress(
-                                    value: 0.77,
-                                    valueFormat: .decimal(places: 2, percent: true),
-                                    valueStyle: .capsule
-                                )
-                                SolidProgress(
-                                    value: 0.77,
-                                    capsule: .init(
-                                        background: AnyShapeStyle(.ultraThinMaterial),
-                                        border: .init(color: AnyShapeStyle(Color.blue), width: 1),
-                                        glassStyle: .ultraThin
-                                    ),
-                                    valueStyle: .capsule
-                                )
-                                SolidProgress(
-                                    value: 0.77,
+                                    progress: .init(value: 0.77),
                                     capsule: .init(
                                         background: AnyShapeStyle(.ultraThinMaterial),
                                         border: .init(color: AnyShapeStyle(Color.blue), width: 1),
@@ -87,7 +63,7 @@ struct SolidProgressAllTypesDemoView: View {
                                     valueStyle: .capsule
                                 )
                                 SolidProgress(
-                                    value: 0.77,
+                                    progress: .init(value: 0.77),
                                     capsule: .init(
                                         background: AnyShapeStyle(.clear),
                                         backgroundImage: Image(.progressBgImg),
@@ -109,22 +85,7 @@ struct SolidProgressAllTypesDemoView: View {
                         ScrollView {
                             VStack(spacing: 12) {
                                 SolidProgress(
-                                    value: 0.77,
-                                    valueFormat: .decimal(places: 1, percent: false),
-                                    container: .init(
-                                        background: AnyShapeStyle(.clear),
-                                        cornerRadius: 16,
-                                        borderColor: .accentColor,
-                                        borderWidth: 1,
-                                        glassStyle: .none
-                                    ),
-                                    valueStyle: .capsule,
-                                    topDivider: nil,
-                                    bottomDivider: nil
-                                )
-                                SolidProgress(
-                                    value: 0.77,
-                                    valueFormat: .decimal(places: 2, percent: true),
+                                    progress: .init(value: 0.77, format: .decimal(places: 2, percent: true)),
                                     container: .init(
                                         background: AnyShapeStyle(.regularMaterial),
                                         cornerRadius: 16,
@@ -137,22 +98,7 @@ struct SolidProgressAllTypesDemoView: View {
                                     bottomDivider: nil
                                 )
                                 SolidProgress(
-                                    value: 0.77,
-                                    valueFormat: .decimal(places: 3, percent: true),
-                                    container: .init(
-                                        background: AnyShapeStyle(.ultraThinMaterial),
-                                        cornerRadius: 16,
-                                        borderColor: .accentColor,
-                                        borderWidth: 1,
-                                        glassStyle: .ultraThin
-                                    ),
-                                    valueStyle: .capsule,
-                                    topDivider: nil,
-                                    bottomDivider: nil
-                                )
-                                SolidProgress(
-                                    value: 0.88,
-                                    valueFormat: .decimal(places: 2, percent: true),
+                                    progress: .init(value: 0.77, format: .decimal(places: 2, percent: true)),
                                     container: .init(
                                         background: AnyShapeStyle(.ultraThinMaterial),
                                         cornerRadius: 16,
@@ -169,8 +115,7 @@ struct SolidProgressAllTypesDemoView: View {
                                     bottomDivider: nil
                                 )
                                 SolidProgress(
-                                    value: 0.77,
-                                    valueFormat: .decimal(places: 3, percent: true),
+                                    progress: .init(value: 0.77, format: .decimal(places: 3, percent: true)),
                                     container: .init(
                                         background: AnyShapeStyle(.regularMaterial),
                                         backgroundImage: Image(.progressBgImg),
@@ -184,7 +129,7 @@ struct SolidProgressAllTypesDemoView: View {
                                     bottomDivider: nil
                                 )
                                 SolidProgress(
-                                    value: 0.77,
+                                    progress: .init(value: 0.77),
                                     container: .init(
                                         background: AnyShapeStyle(.clear),
                                         backgroundImage: Image(.progressBgImg),
@@ -208,19 +153,19 @@ struct SolidProgressAllTypesDemoView: View {
                         ScrollView {
                             VStack(spacing: 12) {
                                 SolidProgress(
-                                    value: 0.5,
+                                    progress: .init(value: 0.5),
                                     orientation: .vertical,
                                     valuePosition: .leading,
                                     customProgressContainerHeight: 100
                                 )
                                 SolidProgress(
-                                    value: 0.5,
+                                    progress: .init(value: 0.5),
                                     orientation: .vertical,
                                     valuePosition: .trailing,
                                     customProgressContainerHeight: 100
                                 )
                                 SolidProgress(
-                                    value: 0.5,
+                                    progress: .init(value: 0.5),
                                     orientation: .vertical,
                                     capsule: .init(
                                         background: AnyShapeStyle(.clear),
@@ -234,13 +179,13 @@ struct SolidProgressAllTypesDemoView: View {
                                     customProgressContainerHeight: 100,
                                 )
                                 SolidProgress(
-                                    value: 0.5,
+                                    progress: .init(value: 0.5),
                                     orientation: .vertical,
                                     valuePosition: .top,
                                     customProgressContainerHeight: 100
                                 )
                                 SolidProgress(
-                                    value: 0.5,
+                                    progress: .init(value: 0.5),
                                     orientation: .vertical,
                                     valuePosition: .bottom,
                                     customProgressContainerHeight: 100
@@ -257,7 +202,7 @@ struct SolidProgressAllTypesDemoView: View {
                         ScrollView {
                             VStack(spacing: 12) {
                                 SolidProgress(
-                                    value: 0.0,
+                                    progress: .init(value: 0.0),
                                     progressStyle: .init(
                                         type: .circular,
                                         tint: .red,
@@ -266,7 +211,7 @@ struct SolidProgressAllTypesDemoView: View {
                                     customCircularScale: 0.5
                                 )
                                 SolidProgress(
-                                    value: 0.0,
+                                    progress: .init(value: 0.0),
                                     progressStyle: .init(
                                         type: .circular,
                                         tint: .green,

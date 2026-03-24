@@ -11,8 +11,7 @@ import SwiftUI
 public struct SolidProgress: View {
     
     // MARK: - Input Properties (core data)
-    private let value: Double
-    private let valueFormat: SolidProgressValueFormat
+    private let progress: SolidProgressValue
     
     // MARK: - Configuration (behavior & layout)
     private let orientation: SolidProgressOrientation
@@ -41,12 +40,9 @@ public struct SolidProgress: View {
     private let topDivider: SolidProgressDivider?
     private let bottomDivider: SolidProgressDivider?
     
-    private let formatter = NumberFormatter()
-    
     // MARK: - Init
     public init(
-        value: Double,
-        valueFormat: SolidProgressValueFormat = .integer(percent: true),
+        progress: SolidProgressValue,
         
         orientation: SolidProgressOrientation = .horizontal,
         size: SolidProgressSize = .medium,
@@ -69,9 +65,7 @@ public struct SolidProgress: View {
         topDivider: SolidProgressDivider? = nil,
         bottomDivider: SolidProgressDivider? = nil
     ) {
-        // Clamp progress value to valid range 0...1
-        self.value = min(max(value, 0), 1)
-        self.valueFormat = valueFormat
+        self.progress = progress
         
         self.orientation = orientation
         self.size = size
@@ -171,7 +165,7 @@ extension SolidProgress {
             }
         }
         .padding(progressStyle.padding)
-        .animation(.easeInOut(duration: 0.25), value: value)
+        .animation(.easeInOut(duration: 0.25), value: progress.value)
     }
     
     var horizontalLayout: some View {
@@ -283,7 +277,7 @@ extension SolidProgress {
                 
             case .linear:
                 LinearProgressTrack(
-                    progress: value,
+                    progress: progress.value,
                     height: progressStyle.trackHeight,
                     tint: progressStyle.tint,
                     trackColor: progressStyle.trackColor
@@ -300,7 +294,7 @@ extension SolidProgress {
                 )
                 
             case .circular:
-                ProgressView(value: value)
+                ProgressView(value: progress.value)
                     .progressViewStyle(.circular)
                     .tint(progressStyle.tint)
                     .frame(
@@ -313,13 +307,13 @@ extension SolidProgress {
     }
     
     var valueText: some View {
-        Text(formattedValue)
+        Text(progress.formatted)
             .font(font)
             .foregroundStyle(valueColor)
     }
     
     var valueCapsule: some View {
-        Text(formattedValue)
+        Text(progress.formatted)
             .font(font)
             .padding(capsule.padding)
             .background(
@@ -448,51 +442,6 @@ private extension SolidProgress {
     }
 }
 
-// MARK: - Formatting
-private extension SolidProgress {
-    
-    var formattedValue: String {
-        
-        switch valueFormat {
-            
-        case .none:
-            return ""
-            
-        case .integer(let percent):
-            
-            let number = Int(value * 100)
-            return percent ? "\(number)%" : "\(number)"
-            
-        case .decimal(let places, let percent, let separator):
-            
-            formatter.minimumFractionDigits = places
-            formatter.maximumFractionDigits = places
-            
-            switch separator {
-                
-            case .locale:
-                break
-                
-            case .dot:
-                formatter.locale = Locale(identifier: "en_US_POSIX")
-                
-            case .comma:
-                formatter.locale = Locale(identifier: "fr_FR")
-            }
-            
-            let number = value * 100
-            let string = formatter
-                .string(from: NSNumber(value: number)) ?? "\(number)"
-            
-            return percent ? "\(string)%" : string
-            
-        case .custom(let formatter):
-            
-            return formatter(value)
-        }
-    }
-}
-
 // MARK: - Previews
 struct SolidProgress_Previews: PreviewProvider {
     static var previews: some View {
@@ -501,32 +450,28 @@ struct SolidProgress_Previews: PreviewProvider {
                 Section("Simple progress view no %") {
                     NavigationLink("Integer") {
                         SolidProgress(
-                            value: 0.77,
-                            valueFormat: .integer(percent: false)
+                            progress: .init(value: 0.77, format: .integer(percent: false))
                         )
                         .padding(.vertical)
                         Spacer()
                     }
                     NavigationLink("Decimal 1 place") {
                         SolidProgress(
-                            value: 0.77,
-                            valueFormat: .decimal(places: 1, percent: false)
+                            progress: .init(value: 0.77, format: .decimal(places: 1, percent: false))
                         )
                         .padding(.vertical)
                         Spacer()
                     }
                     NavigationLink("Decimal 2 places") {
                         SolidProgress(
-                            value: 0.77,
-                            valueFormat: .decimal(places: 2, percent: false)
+                            progress: .init(value: 0.77, format: .decimal(places: 2, percent: false))
                         )
                         .padding(.vertical)
                         Spacer()
                     }
                     NavigationLink("Decimal 3 places") {
                         SolidProgress(
-                            value: 0.77,
-                            valueFormat: .decimal(places: 3, percent: false)
+                            progress: .init(value: 0.77, format: .decimal(places: 3, percent: false))
                         )
                         .padding(.vertical)
                         Spacer()
@@ -536,32 +481,28 @@ struct SolidProgress_Previews: PreviewProvider {
                 Section("Simple progress view with %") {
                     NavigationLink("Integer") {
                         SolidProgress(
-                            value: 0.77,
-                            valueFormat: .integer(percent: true)
+                            progress: .init(value: 0.77, format: .integer(percent: true))
                         )
                         .padding(.vertical)
                         Spacer()
                     }
                     NavigationLink("Decimal 1 place") {
                         SolidProgress(
-                            value: 0.77,
-                            valueFormat: .decimal(places: 1, percent: true)
+                            progress: .init(value: 0.77, format: .decimal(places: 1, percent: true))
                         )
                         .padding(.vertical)
                         Spacer()
                     }
                     NavigationLink("Decimal 2 places") {
                         SolidProgress(
-                            value: 0.77,
-                            valueFormat: .decimal(places: 2, percent: true)
+                            progress: .init(value: 0.77, format: .decimal(places: 2, percent: true))
                         )
                         .padding(.vertical)
                         Spacer()
                     }
                     NavigationLink("Decimal 3 places") {
                         SolidProgress(
-                            value: 0.77,
-                            valueFormat: .decimal(places: 3, percent: true)
+                            progress: .init(value: 0.77, format: .decimal(places: 3, percent: true))
                         )
                         .padding(.vertical)
                         Spacer()
@@ -571,8 +512,7 @@ struct SolidProgress_Previews: PreviewProvider {
                 Section("Capsule progress view") {
                     NavigationLink("Integer") {
                         SolidProgress(
-                            value: 0.77,
-                            valueFormat: .integer(percent: false),
+                            progress: .init(value: 0.77, format: .integer(percent: false)),
                             valueStyle: .capsule
                         )
                         .padding(.vertical)
@@ -580,8 +520,7 @@ struct SolidProgress_Previews: PreviewProvider {
                     }
                     NavigationLink("Decimal 1 place") {
                         SolidProgress(
-                            value: 0.77,
-                            valueFormat: .decimal(places: 1, percent: false),
+                            progress: .init(value: 0.77, format: .decimal(places: 1, percent: false)),
                             valueStyle: .capsule
                         )
                         .padding(.vertical)
@@ -589,8 +528,7 @@ struct SolidProgress_Previews: PreviewProvider {
                     }
                     NavigationLink("Decimal 2 places with %") {
                         SolidProgress(
-                            value: 0.77,
-                            valueFormat: .decimal(places: 2, percent: true),
+                            progress: .init(value: 0.77, format: .decimal(places: 2, percent: true)),
                             valueStyle: .capsule
                         )
                         .padding(.vertical)
@@ -599,7 +537,7 @@ struct SolidProgress_Previews: PreviewProvider {
                     NavigationLink("UltraThinMaterial") {
                         VStack {
                             SolidProgress(
-                                value: 0.77,
+                                progress: .init(value: 0.77),
                                 capsule: .init(
                                     background: AnyShapeStyle(.ultraThinMaterial),
                                     border: .init(color: AnyShapeStyle(Color.accentColor), width: 1),
@@ -608,7 +546,7 @@ struct SolidProgress_Previews: PreviewProvider {
                                 valueStyle: .capsule,
                             )
                             SolidProgress(
-                                value: 0.77,
+                                progress: .init(value: 0.77),
                                 capsule: .init(
                                     background: AnyShapeStyle(.ultraThinMaterial),
                                     border: .init(color: AnyShapeStyle(Color.blue), width: 1),
@@ -626,7 +564,7 @@ struct SolidProgress_Previews: PreviewProvider {
                     }
                     NavigationLink("Capsule BG Image") {
                         SolidProgress(
-                            value: 0.77,
+                            progress: .init(value: 0.77),
                             capsule: .init(
                                 background: AnyShapeStyle(.clear),
                                 backgroundImage: Image(.progressBgImg),
@@ -644,8 +582,7 @@ struct SolidProgress_Previews: PreviewProvider {
                 Section("Card container progress view") {
                     NavigationLink("Clear") {
                         SolidProgress(
-                            value: 0.77,
-                            valueFormat: .decimal(places: 1, percent: false),
+                            progress: .init(value: 0.77, format: .decimal(places: 1, percent: false)),
                             container: .init(
                                 background: AnyShapeStyle(.clear),
                                 cornerRadius: 16,
@@ -662,8 +599,7 @@ struct SolidProgress_Previews: PreviewProvider {
                     }
                     NavigationLink("RegularMaterial") {
                         SolidProgress(
-                            value: 0.77,
-                            valueFormat: .decimal(places: 2, percent: true),
+                            progress: .init(value: 0.77, format: .decimal(places: 2, percent: true)),
                             container: .init(
                                 background: AnyShapeStyle(.regularMaterial),
                                 cornerRadius: 16,
@@ -682,8 +618,7 @@ struct SolidProgress_Previews: PreviewProvider {
                     NavigationLink("UltraThinMaterial") {
                         VStack {
                             SolidProgress(
-                                value: 0.77,
-                                valueFormat: .decimal(places: 3, percent: true),
+                                progress: .init(value: 0.77, format: .decimal(places: 3, percent: true)),
                                 container: .init(
                                     background: AnyShapeStyle(.ultraThinMaterial),
                                     cornerRadius: 16,
@@ -698,8 +633,7 @@ struct SolidProgress_Previews: PreviewProvider {
                                 valueStyle: .capsule
                             )
                             SolidProgress(
-                                value: 0.88,
-                                valueFormat: .decimal(places: 2, percent: true),
+                                progress: .init(value: 0.88, format: .decimal(places: 2, percent: true)),
                                 container: .init(
                                     background: AnyShapeStyle(.ultraThinMaterial),
                                     cornerRadius: 16,
@@ -728,8 +662,7 @@ struct SolidProgress_Previews: PreviewProvider {
                     NavigationLink("BG Image") {
                         VStack {
                             SolidProgress(
-                                value: 0.77,
-                                valueFormat: .decimal(places: 3, percent: true),
+                                progress: .init(value: 0.77, format: .decimal(places: 3, percent: true)),
                                 progressStyle: .init(
                                     type: .linear,
                                     tint: .accentColor,
@@ -754,7 +687,7 @@ struct SolidProgress_Previews: PreviewProvider {
                             
                             
                             SolidProgress(
-                                value: 0.77,
+                                progress: .init(value: 0.77),
                                 capsule: .init(
                                     background: AnyShapeStyle(.clear),
                                     backgroundImage: Image(.progressBgImg),
@@ -773,7 +706,7 @@ struct SolidProgress_Previews: PreviewProvider {
                 Section("Vertical progress view") {
                     NavigationLink("Vertical leading") {
                         SolidProgress(
-                            value: 0.5,
+                            progress: .init(value: 0.5),
                             orientation: .vertical,
                             valuePosition: .leading,
                             customProgressContainerHeight: 100
@@ -783,7 +716,7 @@ struct SolidProgress_Previews: PreviewProvider {
                     }
                     NavigationLink("Vertical trailing") {
                         SolidProgress(
-                            value: 0.5,
+                            progress: .init(value: 0.5),
                             orientation: .vertical,
                             valuePosition: .trailing,
                             customProgressContainerHeight: 100
@@ -793,7 +726,7 @@ struct SolidProgress_Previews: PreviewProvider {
                     }
                     NavigationLink("Vertical overlayCenter") {
                         SolidProgress(
-                            value: 0.5,
+                            progress: .init(value: 0.5),
                             orientation: .vertical,
                             capsule: .init(
                                 background: AnyShapeStyle(Color.accentColor),
@@ -809,7 +742,7 @@ struct SolidProgress_Previews: PreviewProvider {
                     }
                     NavigationLink("Vertical top") {
                         SolidProgress(
-                            value: 0.5,
+                            progress: .init(value: 0.5),
                             orientation: .vertical,
                             valuePosition: .top,
                             customProgressContainerHeight: 100
@@ -819,7 +752,7 @@ struct SolidProgress_Previews: PreviewProvider {
                     }
                     NavigationLink("Vertical bottom") {
                         SolidProgress(
-                            value: 0.5,
+                            progress: .init(value: 0.5),
                             orientation: .vertical,
                             valuePosition: .bottom,
                             customProgressContainerHeight: 100
@@ -832,7 +765,7 @@ struct SolidProgress_Previews: PreviewProvider {
                 Section("Circular progress view") {
                     NavigationLink("Circular small red") {
                         SolidProgress(
-                            value: 0.0,
+                            progress: .init(value: 0.0),
                             progressStyle: .init(
                                 type: .circular,
                                 tint: .red,
@@ -845,7 +778,7 @@ struct SolidProgress_Previews: PreviewProvider {
                     }
                     NavigationLink("Circular green card") {
                         SolidProgress(
-                            value: 0.0,
+                            progress: .init(value: 0.0),
                             progressStyle: .init(
                                 type: .circular,
                                 tint: .green,

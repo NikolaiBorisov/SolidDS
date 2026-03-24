@@ -24,8 +24,7 @@ struct SolidProgressDemoView: View {
         VStack(spacing: 20) {
             
             SolidProgress(
-                value: progress,
-                valueFormat: .decimal(places: 1, percent: true),
+                progress: .init(value: progress, format: .decimal(places: 1, percent: true)),
                 valueStyle: .capsule
             )
             
