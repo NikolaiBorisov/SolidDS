@@ -25,7 +25,7 @@ struct SolidProgressDemoView: View {
             
             SolidProgress(
                 progress: .init(value: progress, format: .decimal(places: 1, percent: true)),
-                valueStyle: .capsule
+                valueConfig: .init(style: .capsule)
             )
             
             controls
