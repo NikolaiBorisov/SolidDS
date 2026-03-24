@@ -1,6 +1,6 @@
 # SolidDS
 
-![Version](https://img.shields.io/badge/version-0.8.0-blue)
+![Version](https://img.shields.io/badge/version-0.9.0-blue)
 ![Swift](https://img.shields.io/badge/Swift-6-orange)
 ![Platform](https://img.shields.io/badge/iOS-15%2B-blue)
 ![SPM](https://img.shields.io/badge/SPM-supported-brightgreen)
@@ -22,7 +22,7 @@ A lightweight SwiftUI design system providing reusable components, design tokens
 Add the package using Swift Package Manager:
 
 ```swift
-.package(url: "https://github.com/NikolaiBorisov/SolidDS.git", from: "0.8.0")
+.package(url: "https://github.com/NikolaiBorisov/SolidDS.git", from: "0.9.0")
 ```
 
 Or add it in Xcode:
