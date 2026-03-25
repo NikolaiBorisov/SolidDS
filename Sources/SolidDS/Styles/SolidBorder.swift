@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Simple wrapper for SwiftUI border settings
 public struct SolidBorder {
     public var color: AnyShapeStyle
     public var width: CGFloat

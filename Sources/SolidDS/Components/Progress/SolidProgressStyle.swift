@@ -8,7 +8,7 @@
 import SwiftUI
 
 /// Defines the visual styling of a `SolidProgress` view.
-/// 
+///
 /// Includes colors, track size, and padding shared across all progress types.
 public struct SolidProgressStyle {
     
@@ -26,6 +26,7 @@ public struct SolidProgressStyle {
     public var tint: Color
     public var trackColor: Color
     public var trackHeight: CGFloat
+    public var trackShadow: SolidShadow?
     public var padding: EdgeInsets
     
     public init(
@@ -33,12 +34,14 @@ public struct SolidProgressStyle {
         tint: Color = .accentColor,
         trackColor: Color = Color.secondary.opacity(0.2),
         trackHeight: CGFloat = 4,
+        trackShadow: SolidShadow? = nil,
         padding: EdgeInsets = ProgressDefaults.progressPadding
     ) {
         self.type = type
         self.tint = tint
         self.trackColor = trackColor
         self.trackHeight = trackHeight
+        self.trackShadow = trackShadow
         self.padding = padding
     }
 }
