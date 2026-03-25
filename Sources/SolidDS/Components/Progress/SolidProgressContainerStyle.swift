@@ -19,6 +19,7 @@ public struct SolidProgressContainerStyle {
     public var borderWidth: CGFloat
     public var glassStyle: SolidProgressGlassStyle
     public var glassColors: [Color]?
+    public var shadow: SolidShadow?
     
     public init(
         background: AnyShapeStyle = AnyShapeStyle(.clear),
@@ -27,7 +28,8 @@ public struct SolidProgressContainerStyle {
         borderColor: Color? = nil,
         borderWidth: CGFloat = 0,
         glassStyle: SolidProgressGlassStyle = .none,
-        glassColors: [Color]? = nil
+        glassColors: [Color]? = nil,
+        shadow: SolidShadow? = nil
     ) {
         self.background = background
         self.backgroundImage = backgroundImage
@@ -36,6 +38,7 @@ public struct SolidProgressContainerStyle {
         self.borderWidth = borderWidth
         self.glassStyle = glassStyle
         self.glassColors = glassColors
+        self.shadow = shadow
     }
 }
 

@@ -30,6 +30,8 @@ public struct SolidProgressCapsuleStyle {
     
     public var padding: EdgeInsets
     
+    public var shadow: SolidShadow?
+    
     public init(
         background: AnyShapeStyle = AnyShapeStyle(.secondary.opacity(0.15)),
         backgroundImage: Image? = nil,
@@ -39,7 +41,9 @@ public struct SolidProgressCapsuleStyle {
         glassStyle: SolidProgressGlassStyle = .none,
         glassColors: [Color]? = nil,
         
-        padding: EdgeInsets = SolidProgressCapsuleStyle.defaultPadding
+        padding: EdgeInsets = SolidProgressCapsuleStyle.defaultPadding,
+        
+        shadow: SolidShadow? = nil
     ) {
         self.background = background
         self.backgroundImage = backgroundImage
@@ -50,6 +54,8 @@ public struct SolidProgressCapsuleStyle {
         self.glassColors = glassColors
         
         self.padding = padding
+        
+        self.shadow = shadow
     }
 }
 

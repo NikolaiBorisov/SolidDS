@@ -148,13 +148,13 @@ struct SolidProgressAllTypesDemoView: View {
                                     progress: .init(value: 0.5),
                                     valueConfig: .init(position: .leading, style: .capsule),
                                     orientation: .vertical,
-                                    customProgressContainerHeight: 100
+                                    customSettings: .init(progressContainerHeight: 100)
                                 )
                                 SolidProgress(
                                     progress: .init(value: 0.5),
                                     valueConfig: .init(position: .trailing, style: .capsule),
                                     orientation: .vertical,
-                                    customProgressContainerHeight: 100
+                                    customSettings: .init(progressContainerHeight: 100)
                                 )
                                 SolidProgress(
                                     progress: .init(value: 0.5),
@@ -166,19 +166,19 @@ struct SolidProgressAllTypesDemoView: View {
                                         border: .init(color: AnyShapeStyle(Color.blue), width: 1),
                                         glassStyle: .none
                                     ),
-                                    customProgressContainerHeight: 100,
+                                    customSettings: .init(progressContainerHeight: 100)
                                 )
                                 SolidProgress(
                                     progress: .init(value: 0.5),
                                     valueConfig: .init(position: .top, style: .capsule),
                                     orientation: .vertical,
-                                    customProgressContainerHeight: 100
+                                    customSettings: .init(progressContainerHeight: 100)
                                 )
                                 SolidProgress(
                                     progress: .init(value: 0.5),
                                     valueConfig: .init(position: .bottom, style: .capsule),
                                     orientation: .vertical,
-                                    customProgressContainerHeight: 100
+                                    customSettings: .init(progressContainerHeight: 100)
                                 )
                             }
                             .padding(.vertical)
@@ -198,7 +198,7 @@ struct SolidProgressAllTypesDemoView: View {
                                         tint: .red,
                                         padding: .init(top: 6, leading: 8, bottom: 6, trailing: 8)
                                     ),
-                                    customCircularScale: 0.5
+                                    customSettings: .init(circularScale: 0.5)
                                 )
                                 SolidProgress(
                                     progress: .init(value: 0.0),
@@ -213,7 +213,103 @@ struct SolidProgressAllTypesDemoView: View {
                                         borderColor: .primary,
                                         borderWidth: 1
                                     ),
-                                    customCircularScale: 1.0
+                                    customSettings: .init(circularScale: 0.9)
+                                )
+                            }
+                            .padding()
+                            Spacer()
+                        }
+                    }
+                }
+                Section("Full setup") {
+                    NavigationLink("SolidProgress") {
+                        ScrollView {
+                            VStack(spacing: 12) {
+                                SolidProgress(
+                                    progress: .init(
+                                        value: 0.88,
+                                        format: .decimal(places: 2, percent: true)
+                                    ),
+                                    valueConfig: .init(
+                                        position: .trailing,
+                                        style: .capsule,
+                                        color: .primary,
+                                        font: .caption.monospacedDigit()
+                                    ),
+                                    orientation: .horizontal,
+                                    size: .medium,
+                                    progressStyle: .init(
+                                        type: .linear,
+                                        tint: .green,
+                                        trackColor: Color.gray,
+                                        trackHeight: 4,
+                                        trackShadow: .init(
+                                            color: .black.opacity(0.25),
+                                            radius: 4,
+                                            x: 0,
+                                            y: 2
+                                        ),
+                                        padding: EdgeInsets(
+                                            top: 6,
+                                            leading: 8,
+                                            bottom: 6,
+                                            trailing: 8
+                                        )
+                                    ),
+                                    container: .init(
+                                        background: AnyShapeStyle(.regularMaterial),
+                                        backgroundImage: Image(.progressBgImg),
+                                        cornerRadius: 16,
+                                        borderColor: .accentColor,
+                                        borderWidth: 1,
+                                        glassStyle: .ultraThin,
+                                        glassColors: [
+                                            Color.red.opacity(0.3),
+                                            Color.orange.opacity(0.1)
+                                        ],
+                                        shadow: .init(
+                                            color: .black.opacity(0.25),
+                                            radius: 4,
+                                            x: 0,
+                                            y: 2
+                                        )
+                                    ),
+                                    capsule: .init(
+                                        background: AnyShapeStyle(.ultraThinMaterial),
+                                        backgroundImage: Image(.progressBgImg),
+                                        border: .init(
+                                            color: AnyShapeStyle(Color.accentColor.opacity(0.3)),
+                                            width: 1
+                                        ),
+                                        glassStyle: .ultraThin,
+                                        glassColors: [
+                                            Color.red.opacity(0.3),
+                                            Color.orange.opacity(0.1)
+                                        ],
+                                        padding: EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6),
+                                        shadow: .init(
+                                            color: .black.opacity(0.25),
+                                            radius: 4,
+                                            x: 0,
+                                            y: 2
+                                        )
+                                    ),
+                                    customSettings: .init(
+                                        contentSpacing: 10,
+                                        progressContainerHeight: 25,
+                                        circularScale: 0,
+                                        circularContainerSize: nil
+                                    ),
+                                    topDivider: .init(
+                                        color: .primary,
+                                        height: 2,
+                                        padding: EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+                                    ),
+                                    bottomDivider: .init(
+                                        color: .primary,
+                                        height: 2,
+                                        padding: EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+                                    )
                                 )
                             }
                             .padding()

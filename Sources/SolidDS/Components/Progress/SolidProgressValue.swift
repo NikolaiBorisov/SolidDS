@@ -80,3 +80,16 @@ public extension SolidProgressValue {
         }
     }
 }
+
+// MARK: - 🧠 Code for Thought
+/*
+ SolidProgressValue + formatted extension focuses solely on handling progress data and formatting logic.
+ - Single Responsibility: struct stores raw progress; extension formats it
+ - Separation of concerns: formatting logic decoupled from storage/initialization
+ - Readability & maintainability: computed properties and formatting grouped in extension
+ - Reusability: any view or component can use formatted without modifying the struct
+ Benefits:
+ - Predictable, easy-to-test formatting logic
+ - Easy to extend with new formats
+ - Keeps the data model clean and focused
+ */
