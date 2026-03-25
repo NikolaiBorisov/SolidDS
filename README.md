@@ -50,6 +50,9 @@ import SolidDS
 
 struct ContentView: View {
     var body: some View {
+
+// Full Configuration
+
         SolidProgress(
             progress: .init(
                 value: 0.88,
