@@ -1,6 +1,6 @@
 # SolidDS
 
-![Version](https://img.shields.io/badge/version-0.9.0-blue)
+![Version](https://img.shields.io/badge/version-1.0.0-green)
 ![Swift](https://img.shields.io/badge/Swift-6-orange)
 ![Platform](https://img.shields.io/badge/iOS-15%2B-blue)
 ![SPM](https://img.shields.io/badge/SPM-supported-brightgreen)
@@ -22,7 +22,7 @@ A lightweight SwiftUI design system providing reusable components, design tokens
 Add the package using Swift Package Manager:
 
 ```swift
-.package(url: "https://github.com/NikolaiBorisov/SolidDS.git", from: "0.9.0")
+.package(url: "https://github.com/NikolaiBorisov/SolidDS.git", from: "1.0.0")
 ```
 
 Or add it in Xcode:
@@ -51,7 +51,90 @@ import SolidDS
 struct ContentView: View {
     var body: some View {
         SolidProgress(
-            progress: .init(value: 0.77, format: .integer(percent: false))
+            progress: .init(
+                value: 0.88,
+                format: .decimal(places: 2, percent: true)
+            ),
+            valueConfig: .init(
+                position: .trailing,
+                style: .capsule,
+                color: .primary,
+                font: .caption.monospacedDigit()
+            ),
+            orientation: .horizontal,
+            size: .medium,
+            progressStyle: .init(
+                type: .linear,
+                tint: .green,
+                trackColor: Color.gray,
+                trackHeight: 4,
+                trackShadow: .init(
+                    color: .black.opacity(0.25),
+                    radius: 4,
+                    x: 0,
+                    y: 2
+                ),
+                padding: EdgeInsets(
+                    top: 6,
+                    leading: 8,
+                    bottom: 6,
+                    trailing: 8
+                )
+            ),
+            container: .init(
+                background: AnyShapeStyle(.regularMaterial),
+                backgroundImage: Image(.progressBgImg),
+                cornerRadius: 16,
+                borderColor: .accentColor,
+                borderWidth: 1,
+                glassStyle: .ultraThin,
+                glassColors: [
+                    Color.red.opacity(0.3),
+                    Color.orange.opacity(0.1)
+                ],
+                shadow: .init(
+                    color: .black.opacity(0.25),
+                    radius: 4,
+                    x: 0,
+                    y: 2
+                )
+            ),
+            capsule: .init(
+                background: AnyShapeStyle(.ultraThinMaterial),
+                backgroundImage: Image(.progressBgImg),
+                border: .init(
+                    color: AnyShapeStyle(Color.accentColor.opacity(0.3)),
+                    width: 1
+                ),
+                glassStyle: .ultraThin,
+                glassColors: [
+                    Color.red.opacity(0.3),
+                    Color.orange.opacity(0.1)
+                ],
+                padding: EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6),
+                shadow: .init(
+                    color: .black.opacity(0.25),
+                    radius: 4,
+                    x: 0,
+                    y: 2
+                )
+            ),
+            customSettings: .init(
+                contentSpacing: 10,
+                progressContainerHeight: 25,
+                circularScale: 0,
+                circularContainerSize: nil
+            ),
+            topDivider: .init(
+                color: .primary,
+                height: 2,
+                padding: EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+            ),
+            bottomDivider: .init(
+                color: .primary,
+                height: 2,
+                padding: EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+            )
         )
         .padding()
     }
