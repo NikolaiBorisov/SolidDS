@@ -588,7 +588,7 @@ struct ProgressRow: View {
                         tapCount += 1
                         
                         // Automatically activate next row after 5 taps
-                        if tapCount >= 5 {
+                        if tapCount >= 2 {
                             activeIndex += 1
                         }
                     }
