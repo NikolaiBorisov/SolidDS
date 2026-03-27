@@ -151,9 +151,7 @@ struct ContentView: View {
 - Reusable UI primitives
 
 ## Demo Video
-Here’s a quick demo of the SolidProgress view in action:
-
-<video src="Assets/Video/Progress_demo.mp4" width="600" controls></video>
+[Watch full demo](Assets/Video/Progress_demo.mp4)
 
 ## Demo Screenshots
 
