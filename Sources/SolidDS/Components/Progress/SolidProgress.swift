@@ -30,6 +30,9 @@ public struct SolidProgress: View {
     private let topDivider: SolidProgressDivider?
     private let bottomDivider: SolidProgressDivider?
     
+    // MARK: - Animation
+    private let animation: Animation?
+    
     // MARK: - Init
     public init(
         progress: SolidProgressValue,
@@ -45,7 +48,9 @@ public struct SolidProgress: View {
         customSettings: SolidProgressCustomSettings = .init(),
         
         topDivider: SolidProgressDivider? = nil,
-        bottomDivider: SolidProgressDivider? = nil
+        bottomDivider: SolidProgressDivider? = nil,
+        
+        animation: Animation? = .easeInOut(duration: 0.25),
     ) {
         self.progress = progress
         self.valueConfig = valueConfig
@@ -61,6 +66,8 @@ public struct SolidProgress: View {
         
         self.topDivider = topDivider
         self.bottomDivider = bottomDivider
+        
+        self.animation = animation
     }
     
     // MARK: - Body
@@ -145,7 +152,7 @@ extension SolidProgress {
             }
         }
         .padding(progressStyle.padding)
-        .animation(.easeInOut(duration: 0.25), value: progress.value)
+        .animation(animation, value: progress.value)
     }
     
     var horizontalLayout: some View {
@@ -440,13 +447,38 @@ struct SolidProgress_Previews: PreviewProvider {
                             .padding(.vertical)
                         Spacer()
                     }
-                    NavigationLink("Decimal 1 place") {
+                    NavigationLink("Decimal 1") {
                         SolidProgress(progress: .init(value: 0.77, format: .decimal(places: 1, percent: false)))
                             .padding(.vertical)
                         Spacer()
                     }
-                    NavigationLink("Decimal 3 places") {
+                    NavigationLink("Decimal 3") {
                         SolidProgress(progress: .init(value: 0.77, format: .decimal(places: 3, percent: false)))
+                            .padding(.vertical)
+                        Spacer()
+                    }
+                    NavigationLink("Decimal 3 + Spring Animation") {
+                        ProgressDemoView(animation: .spring(response: 0.4, dampingFraction: 0.7))
+                            .padding(.vertical)
+                        Spacer()
+                    }
+                    NavigationLink("Decimal 3 + Snappy Animation") {
+                        ProgressDemoView(animation: .snappy(duration: 0.4))
+                            .padding(.vertical)
+                        Spacer()
+                    }
+                    NavigationLink("Decimal 3 + Smooth Animation") {
+                        ProgressDemoView(animation: .smooth(duration: 0.5))
+                            .padding(.vertical)
+                        Spacer()
+                    }
+                    NavigationLink("Decimal 3 + Extra bouncy Animation") {
+                        ProgressDemoView(animation: .spring(response: 0.5, dampingFraction: 0.4))
+                            .padding(.vertical)
+                        Spacer()
+                    }
+                    NavigationLink("Decimal 3 + Advanced Animation") {
+                        ProgressDemoView(animation: .spring(response: 0.35, dampingFraction: 0.8, blendDuration: 0.2))
                             .padding(.vertical)
                         Spacer()
                     }
