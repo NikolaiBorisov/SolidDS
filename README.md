@@ -1,6 +1,6 @@
 # SolidDS
 
-![Version](https://img.shields.io/badge/version-1.0.0-green)
+![Version](https://img.shields.io/badge/version-1.1.0-green)
 ![Swift](https://img.shields.io/badge/Swift-6-orange)
 ![Platform](https://img.shields.io/badge/iOS-15%2B-blue)
 ![SPM](https://img.shields.io/badge/SPM-supported-brightgreen)
@@ -22,7 +22,7 @@ A lightweight SwiftUI design system providing reusable components, design tokens
 Add the package using Swift Package Manager:
 
 ```swift
-.package(url: "https://github.com/NikolaiBorisov/SolidDS.git", from: "1.0.0")
+.package(url: "https://github.com/NikolaiBorisov/SolidDS.git", from: "1.1.0")
 ```
 
 Or add it in Xcode:
@@ -137,7 +137,8 @@ struct ContentView: View {
                 color: .primary,
                 height: 2,
                 padding: EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
-            )
+            ),
+            animation: .easeInOut(duration: 0.25)
         )
         .padding()
     }
