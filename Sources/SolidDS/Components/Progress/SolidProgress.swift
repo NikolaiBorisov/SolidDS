@@ -570,14 +570,68 @@ struct SolidProgress_Previews: PreviewProvider {
                     }
                 }
                 Section("Card container progress view") {
+                    NavigationLink("Gradient Progress") {
+                        SolidProgress(
+                            progress: .init(value: 0.77),
+                            valueConfig: .init(style: .capsule),
+                            progressStyle: .init(
+                                type: .linear,
+                                tint: AnyShapeStyle(
+                                    LinearGradient(
+                                        colors: [.red, .orange, .green],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                ),
+                                trackColor: AnyShapeStyle(Color.gray.opacity(0.2)),
+                                trackHeight: 6
+                            ),
+                            capsule: .init(
+                                background: AnyShapeStyle(.ultraThinMaterial),
+                                glassStyle: .ultraThin
+                            )
+                        )
+                        .padding()
+                        Spacer()
+                    }
+                    NavigationLink("Gradient Progress + Track Gradient") {
+                        SolidProgress(
+                            progress: .init(value: 0.77),
+                            valueConfig: .init(style: .capsule),
+                            progressStyle: .init(
+                                type: .linear,
+                                tint: AnyShapeStyle(
+                                    LinearGradient(
+                                        colors: [.purple, .blue],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                ),
+                                trackColor: AnyShapeStyle(
+                                    LinearGradient(
+                                        colors: [.gray.opacity(0.4), .cyan.opacity(0.2)],
+                                        startPoint: .top,
+                                        endPoint: .bottom
+                                    )
+                                ),
+                                trackHeight: 8
+                            ),
+                            capsule: .init(
+                                background: AnyShapeStyle(.ultraThinMaterial),
+                                glassStyle: .ultraThin
+                            )
+                        )
+                        .padding()
+                        Spacer()
+                    }
                     NavigationLink("Clear") {
                         SolidProgress(
                             progress: .init(value: 0.77, format: .decimal(places: 1, percent: false)),
                             valueConfig: .init(style: .capsule),
                             progressStyle: .init(
                                 type: .linear,
-                                tint: .accentColor,
-                                trackColor: .gray,
+                                tint: AnyShapeStyle(Color.accentColor),
+                                trackColor: AnyShapeStyle(Color.gray),
                                 trackHeight: 4,
                                 trackShadow: .init(
                                     color: .green,
@@ -642,8 +696,8 @@ struct SolidProgress_Previews: PreviewProvider {
                                 valueConfig: .init(style: .capsule),
                                 progressStyle: .init(
                                     type: .linear,
-                                    tint: .accentColor,
-                                    trackColor: .gray,
+                                    tint: AnyShapeStyle(Color.accentColor),
+                                    trackColor: AnyShapeStyle(Color.gray),
                                     trackHeight: 4,
                                     padding: .init(top: 6, leading: 8, bottom: 6, trailing: 8)
                                 ),
@@ -678,8 +732,8 @@ struct SolidProgress_Previews: PreviewProvider {
                                 valueConfig: .init(style: .capsule),
                                 progressStyle: .init(
                                     type: .linear,
-                                    tint: .accentColor,
-                                    trackColor: .gray,
+                                    tint: AnyShapeStyle(Color.accentColor),
+                                    trackColor: AnyShapeStyle(Color.gray),
                                     trackHeight: 4,
                                     padding: .init(top: 6, leading: 8, bottom: 6, trailing: 8)
                                 ),
@@ -774,7 +828,7 @@ struct SolidProgress_Previews: PreviewProvider {
                             progress: .init(value: 0.0),
                             progressStyle: .init(
                                 type: .circular,
-                                tint: .red,
+                                tint: AnyShapeStyle(Color.red),
                                 padding: .init(top: 6, leading: 8, bottom: 6, trailing: 8)
                             ),
                             customSettings: .init(circularScale: 0.5)
@@ -787,7 +841,7 @@ struct SolidProgress_Previews: PreviewProvider {
                             progress: .init(value: 0.0),
                             progressStyle: .init(
                                 type: .circular,
-                                tint: .green,
+                                tint: AnyShapeStyle(Color.green),
                                 padding: .init(top: 6, leading: 8, bottom: 6, trailing: 8)
                             ),
                             container: .init(
