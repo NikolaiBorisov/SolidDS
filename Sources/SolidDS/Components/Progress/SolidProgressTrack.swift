@@ -14,15 +14,15 @@ struct SolidProgressTrack: View {
     
     public var progress: Double
     public var height: CGFloat
-    public var tint: Color
-    public var trackColor: Color
+    public var tint: AnyShapeStyle
+    public var trackColor: AnyShapeStyle
     public var shadow: SolidShadow?
     
     init(
         progress: Double,
         height: CGFloat,
-        tint: Color,
-        trackColor: Color,
+        tint: AnyShapeStyle,
+        trackColor: AnyShapeStyle,
         shadow: SolidShadow? = nil
     ) {
         self.progress = progress

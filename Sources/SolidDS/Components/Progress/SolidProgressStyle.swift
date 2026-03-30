@@ -23,16 +23,16 @@ public struct SolidProgressStyle {
     }
     
     public var type: SolidProgressType
-    public var tint: Color
-    public var trackColor: Color
+    public var tint: AnyShapeStyle
+    public var trackColor: AnyShapeStyle
     public var trackHeight: CGFloat
     public var trackShadow: SolidShadow?
     public var padding: EdgeInsets
     
     public init(
         type: SolidProgressType = .linear,
-        tint: Color = .accentColor,
-        trackColor: Color = Color.secondary.opacity(0.2),
+        tint: AnyShapeStyle = AnyShapeStyle(Color.accentColor),
+        trackColor: AnyShapeStyle = AnyShapeStyle(Color.secondary.opacity(0.2)),
         trackHeight: CGFloat = 4,
         trackShadow: SolidShadow? = nil,
         padding: EdgeInsets = ProgressDefaults.progressPadding

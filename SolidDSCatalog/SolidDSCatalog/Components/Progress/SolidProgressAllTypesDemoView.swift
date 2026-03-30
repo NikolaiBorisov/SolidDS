@@ -195,7 +195,7 @@ struct SolidProgressAllTypesDemoView: View {
                                     progress: .init(value: 0.0),
                                     progressStyle: .init(
                                         type: .circular,
-                                        tint: .red,
+                                        tint: AnyShapeStyle(Color.red),
                                         padding: .init(top: 6, leading: 8, bottom: 6, trailing: 8)
                                     ),
                                     customSettings: .init(circularScale: 0.5)
@@ -204,11 +204,11 @@ struct SolidProgressAllTypesDemoView: View {
                                     progress: .init(value: 0.0),
                                     progressStyle: .init(
                                         type: .circular,
-                                        tint: .green,
+                                        tint: AnyShapeStyle(Color.green),
                                         padding: .init(top: 6, leading: 8, bottom: 6, trailing: 8)
                                     ),
                                     container: .init(
-                                        background: AnyShapeStyle(.secondary),
+                                        background: AnyShapeStyle(Color.secondary),
                                         cornerRadius: 20,
                                         borderColor: .primary,
                                         borderWidth: 1
@@ -240,8 +240,8 @@ struct SolidProgressAllTypesDemoView: View {
                                     size: .medium,
                                     progressStyle: .init(
                                         type: .linear,
-                                        tint: .green,
-                                        trackColor: Color.gray,
+                                        tint: AnyShapeStyle(Color.green),
+                                        trackColor: AnyShapeStyle(Color.gray),
                                         trackHeight: 4,
                                         trackShadow: .init(
                                             color: .black.opacity(0.25),
