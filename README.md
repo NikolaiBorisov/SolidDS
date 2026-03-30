@@ -68,8 +68,8 @@ struct ContentView: View {
             size: .medium,
             progressStyle: .init(
                 type: .linear,
-                tint: .green,
-                trackColor: Color.gray,
+                tint: AnyShapeStyle(Color.green),
+                trackColor: AnyShapeStyle(Color.gray),
                 trackHeight: 4,
                 trackShadow: .init(
                     color: .black.opacity(0.25),
